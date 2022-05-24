@@ -1,2 +1,2 @@
-# godot_cubedot
+# Cubedot
 Cubic voxel engine for Godot
