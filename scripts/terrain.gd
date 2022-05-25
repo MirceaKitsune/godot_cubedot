@@ -6,6 +6,7 @@ extends Node3D
 @export var density = Vector2(64, 256)
 @export var resolution = 1
 @export var noise_frequency = 0.01
+@export var optimize = true
 
 # Chunks object, handles chunk storage mesh drawing and node management
 class _chunks extends Node3D:
@@ -18,6 +19,7 @@ class _chunks extends Node3D:
 	var view_sphere_lod: Dictionary
 	var update_lod: Dictionary
 	var update_reset: bool
+	var optimize: bool
 
 	var parent: Node3D
 	var viewer: CharacterBody3D
@@ -28,11 +30,12 @@ class _chunks extends Node3D:
 	var node_body: Dictionary
 	var node_body_collisions: Dictionary
 
-	func _init(p: Node3D, v: CharacterBody3D, n: FastNoiseLite, nd: Vector2, dist: int, size: int, lod: int, res: float):
+	func _init(p: Node3D, v: CharacterBody3D, n: FastNoiseLite, nd: Vector2, dist: int, size: int, lod: int, res: float, opt: bool):
 		var size_half = int(round(size / 2))
 		mins = Vector3i(-size_half, -size_half, -size_half)
 		maxs = Vector3i(+size_half, +size_half, +size_half)
 		resolution = res
+		optimize = opt
 		view_chunk = Vector3(INF, INF, INF)
 
 		parent = p
@@ -70,9 +73,9 @@ class _chunks extends Node3D:
 		var p = {}
 		var points_mins = mins / res
 		var points_maxs = maxs / res
-		for x in range(points_mins.x, points_maxs.x + 1):
-			for y in range(points_mins.y, points_maxs.y + 1):
-				for z in range(points_mins.z, points_maxs.z + 1):
+		for x in range(points_mins.x, points_maxs.x):
+			for y in range(points_mins.y, points_maxs.y):
+				for z in range(points_mins.z, points_maxs.z):
 					var vec = Vector3(x, y, z) * res
 					var n = _points_at(pos + vec)
 					if n > 0:
@@ -100,7 +103,7 @@ class _chunks extends Node3D:
 
 	func _chunk_draw(pos: Vector3, points: Dictionary, res: float):
 		var vox = Voxel.new()
-		var mesh = vox.get_mesh(points, res)
+		var mesh = vox.get_mesh(points, res, optimize)
 		var mesh_collision = mesh.create_trimesh_shape()
 		node[pos].set_mesh(mesh)
 		node_body_collisions[pos].set_shape(mesh_collision)
@@ -149,7 +152,7 @@ func _enter_tree():
 	noise.seed = randi()
 	noise.frequency = noise_frequency
 
-	chunks = _chunks.new(self, player, noise, density, distance, chunk_size, lod_levels, resolution)
+	chunks = _chunks.new(self, player, noise, density, distance, chunk_size, lod_levels, resolution, optimize)
 	update_semaphore = Semaphore.new()
 	update_thread = Thread.new()
 	update_thread.start(Callable(self, "_process_update"))
