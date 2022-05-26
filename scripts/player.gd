@@ -25,6 +25,20 @@ func _process(delta):
 	pass
 
 func _physics_process(delta):
+	# Set view modes for debugging
+	if Input.is_key_pressed(KEY_F1):
+		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_DISABLED);
+	if Input.is_key_pressed(KEY_F2):
+		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_UNSHADED);
+	if Input.is_key_pressed(KEY_F3):
+		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_LIGHTING);
+	if Input.is_key_pressed(KEY_F4):
+		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_OVERDRAW);
+	if Input.is_key_pressed(KEY_F5):
+		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_WIREFRAME);
+	if Input.is_key_pressed(KEY_F6):
+		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_NORMAL_BUFFER);
+
 	# Handle horizontal (X and Z) movement
 	if not(Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_RIGHT)):
 		var Movement = Decelaration if is_on_floor() else Air_Decelaration

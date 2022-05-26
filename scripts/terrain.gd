@@ -1,11 +1,11 @@
 extends Node3D
 
-@export var distance = 128
+@export var distance = 256
 @export var chunk_size = 16
 @export var lod_levels = 4
-@export var density = Vector2(64, 256)
+@export var density = Vector2(64, 1024)
 @export var resolution = 1
-@export var noise_frequency = 0.01
+@export var size = 128
 @export var optimize = true
 
 # Chunks object, handles chunk storage mesh drawing and node management
@@ -70,12 +70,14 @@ class _chunks extends Node3D:
 		return 1 - min(max(n, 0), 1)
 
 	func _points(pos: Vector3, res: float):
+		# A margin of 1 extra unit is added to the start and end of the iteration
+		# This lets the mesh generator know the positions of direct neighbor voxels from neighboring chunks
 		var p = {}
 		var points_mins = mins / res
 		var points_maxs = maxs / res
-		for x in range(points_mins.x, points_maxs.x):
-			for y in range(points_mins.y, points_maxs.y):
-				for z in range(points_mins.z, points_maxs.z):
+		for x in range(points_mins.x - 1, points_maxs.x + 1):
+			for y in range(points_mins.y - 1, points_maxs.y + 1):
+				for z in range(points_mins.z - 1, points_maxs.z + 1):
 					var vec = Vector3(x, y, z) * res
 					var n = _points_at(pos + vec)
 					if n > 0:
@@ -102,7 +104,7 @@ class _chunks extends Node3D:
 		node.erase(pos)
 
 	func _chunk_draw(pos: Vector3, points: Dictionary, res: float):
-		var vox = Voxel.new()
+		var vox = Voxel.new(mins, maxs)
 		var mesh = vox.get_mesh(points, res, optimize)
 		var mesh_collision = mesh.create_trimesh_shape()
 		node[pos].set_mesh(mesh)
@@ -148,9 +150,9 @@ var update_thread: Thread
 func _enter_tree():
 	var player = get_parent().get_node("Player")
 	var noise = FastNoiseLite.new()
-	noise.noise_type = noise.TYPE_PERLIN
+	noise.noise_type = noise.TYPE_SIMPLEX
 	noise.seed = randi()
-	noise.frequency = noise_frequency
+	noise.frequency = 1.0 / size
 
 	chunks = _chunks.new(self, player, noise, density, distance, chunk_size, lod_levels, resolution, optimize)
 	update_semaphore = Semaphore.new()
