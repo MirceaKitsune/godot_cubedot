@@ -1,7 +1,7 @@
 extends AnimationPlayer
 
 @export var anim = "daytime"
-@export var speed = 1000
+@export var speed = 100
 @export var offset = 0.0
 
 func _ready():
@@ -15,3 +15,10 @@ func _ready():
 
 	play(anim, 0, duration)
 	seek(time_day, true)
+
+func _process(delta):
+	# Jump to sunrise or moonrise
+	if Input.is_key_pressed(KEY_Q):
+		seek(0.275, true)
+	if Input.is_key_pressed(KEY_E):
+		seek(0.825, true)

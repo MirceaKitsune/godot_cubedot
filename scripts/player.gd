@@ -20,11 +20,10 @@ func _ready():
 	set_process(true)
 
 func _process(delta):
-	# if Input.is_key_pressed(KEY_ESCAPE):
-		# get_tree().quit()
-	pass
+	# Exit the world
+	if Input.is_key_pressed(KEY_ESCAPE):
+		get_tree().quit()
 
-func _physics_process(delta):
 	# Set view modes for debugging
 	if Input.is_key_pressed(KEY_F1):
 		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_DISABLED);
@@ -39,6 +38,7 @@ func _physics_process(delta):
 	if Input.is_key_pressed(KEY_F6):
 		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_NORMAL_BUFFER);
 
+func _physics_process(delta):
 	# Handle horizontal (X and Z) movement
 	if not(Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_RIGHT)):
 		var Movement = Decelaration if is_on_floor() else Air_Decelaration
