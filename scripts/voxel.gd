@@ -1,5 +1,7 @@
 class_name Voxel extends RefCounted
 
+@export var optimize = true
+
 var _surface_tool: SurfaceTool
 var mins: Vector3
 var maxs: Vector3
@@ -61,7 +63,7 @@ func _init(min: Vector3i, max: Vector3i):
 	mins = min
 	maxs = max
 
-func _generate(points: Dictionary, res: float, opt: bool):
+func generate(points: Dictionary, res: float):
 	# Faces are stored in slices each representing the virtual 2D plane the faces occupy
 	var hres = res / 2
 	var slices: Dictionary
@@ -85,7 +87,7 @@ func _generate(points: Dictionary, res: float, opt: bool):
 			# If face optimization is enabled, two scans are preformed through existing faces to detect and merge frontal then lateral matches
 			# If a face that connects to the new face is detected, the old face is positioned and scaled to fill the gap, otherwise a new face is created
 			var q = Quad.new(center, size, d)
-			if opt:
+			if optimize:
 				# Match frontally (across size X)
 				for face in slices[slice]:
 					# Facing in X, parallel in Y, touching in Z
@@ -143,6 +145,3 @@ func _generate(points: Dictionary, res: float, opt: bool):
 	_surface_tool.generate_normals()
 	_surface_tool.commit(arr_mesh)
 	return arr_mesh
-
-func get_mesh(points: Dictionary, res: float, opt: bool):
-	return _generate(points, res, opt)

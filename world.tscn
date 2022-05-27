@@ -1,7 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://2bgr3o35dc77"]
+[gd_scene load_steps=12 format=3 uid="uid://bk8inhcxya6xp"]
 
 [ext_resource type="Script" path="res://scripts/daytime.gd" id="1_sd5hu"]
-[ext_resource type="Script" path="res://scripts/terrain.gd" id="2_kny2v"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="2_kny2v"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="2_wmypn"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_n6vu6"]
@@ -21,15 +21,23 @@ auto_exposure_enabled = true
 auto_exposure_scale = 0.5
 auto_exposure_min_luma = 0.25
 auto_exposure_max_luma = 1.0
+ssr_enabled = true
 ssao_enabled = true
 ssil_enabled = true
+sdfgi_enabled = true
 sdfgi_use_occlusion = true
+sdfgi_bounce_feedback = 1.0
 glow_enabled = true
-fog_light_color = Color(0.247059, 0.372549, 0.498039, 1)
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.01
 
 [sub_resource type="CameraEffects" id="CameraEffects_77pfq"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 500.0
+dof_blur_far_transition = 250.0
+dof_blur_near_enabled = true
+dof_blur_near_distance = 1.0
+dof_blur_amount = 0.05
 
 [sub_resource type="Animation" id="Animation_ul771"]
 resource_name = "daytime"
@@ -82,6 +90,7 @@ _data = {
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pjlnj"]
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource( "2_kny2v" )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( "Environment_m507g" )
@@ -110,15 +119,14 @@ mesh = SubResource( "CapsuleMesh_oay6h" )
 [node name="PlayerCollision" type="CollisionShape3D" parent="Player"]
 shape = SubResource( "CapsuleShape3D_pjlnj" )
 
-[node name="PlayerLight" type="SpotLight3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-light_color = Color(0.74902, 0.87451, 1, 1)
-light_energy = 2.5
-shadow_enabled = true
-spot_range = 50.0
-
 [node name="PlayerCamera" type="Camera3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="Terrain" type="Node3D" parent="."]
-script = ExtResource( "2_kny2v" )
+[node name="PlayerLight" type="OmniLight3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.25, -0.5)
+light_color = Color(1, 0.74902, 0.498039, 1)
+light_energy = 5.0
+light_indirect_energy = 5.0
+shadow_enabled = true
+omni_range = 50.0
+omni_attenuation = 1.5
