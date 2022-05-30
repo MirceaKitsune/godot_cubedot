@@ -10,12 +10,18 @@ config_version=5
 
 _global_script_classes=[{
 "base": "RefCounted",
-"class": &"Voxel",
+"class": &"VoxelData",
 "language": &"GDScript",
-"path": "res://scripts/voxel.gd"
+"path": "res://scripts/lib/voxel_data.gd"
+}, {
+"base": "RefCounted",
+"class": &"VoxelMesh",
+"language": &"GDScript",
+"path": "res://scripts/lib/voxel_mesh.gd"
 }]
 _global_script_class_icons={
-"Voxel": ""
+"VoxelData": "",
+"VoxelMesh": ""
 }
 
 [application]

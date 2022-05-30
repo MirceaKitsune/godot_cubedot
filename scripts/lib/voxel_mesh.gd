@@ -1,4 +1,6 @@
-class_name Voxel extends RefCounted
+# Voxel mesh: Generates the 3D mesh of a chunk from its voxel data object
+# Instances are meant to be used temporarily to obtain a mesh and are then disposed of
+class_name VoxelMesh extends RefCounted
 
 @export var optimize = true
 

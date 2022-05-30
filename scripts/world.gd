@@ -1,9 +1,10 @@
 extends Node3D
 
-@export var density = Vector2(64, 1024)
+@export var resolution_generator = Vector3(1, 0.5, 1)
 @export var resolution = 0.5
 @export var size = 128
 @export var threads = -1
+@export var player_pos = Vector3(0, 128, 0)
 
 const view_profiles = [
 	{ at_threads = 0, distance = 16, chunk = Vector3(2, 1, 2), lod = [1] },
@@ -30,26 +31,6 @@ var player_chunk: Vector3
 
 func _sort(a: Vector3, b: Vector3):
 	return a.distance_to(Vector3i(0, 0, 0)) < b.distance_to(Vector3i(0, 0, 0))
-
-func _points_get(pos: Vector3):
-	var ofs = density[0] if pos.y >= 0 else density[1]
-	var n = noise.get_noise_3dv(pos) + (pos.y / ofs)
-	return 1 - min(max(n, 0), 1)
-
-func _points(pos: Vector3, res: float):
-	# A margin of 1 extra unit is added to the start and end of the iteration
-	# This lets the mesh generator know the positions of direct neighbor voxels from neighboring chunks
-	var p = {}
-	var points_mins = mins / res
-	var points_maxs = maxs / res
-	for x in range(points_mins.x - 1, points_maxs.x + 1):
-		for y in range(points_mins.y - 1, points_maxs.y + 1):
-			for z in range(points_mins.z - 1, points_maxs.z + 1):
-				var vec = Vector3(x, y, z) * res
-				var n = _points_get(pos + vec)
-				if n > 0:
-					p[vec] = n
-	return p
 
 func _update(t: int):
 	# Detect if the viewer position changed while updating and restart the process if so
@@ -89,13 +70,14 @@ func _update(t: int):
 			# Update this chunk if its LOD level changed
 			# Zero LOD is used to mark chunks as empty, this avoids recalculation if no points were found at the smallest resolution
 			if not chunks_lod[t].has(pos) or (chunks_lod[t][pos] > 0 and chunks_lod[t][pos] != lod):
-				var points = _points(pos, lod)
-				if points.size() > 0:
+				var voxel_data = VoxelData.new(noise, mins, maxs)
+				var data = voxel_data.read(pos, lod)
+				if data.size() > 0:
 					if !chunks[t].has(pos):
 						chunks[t][pos] = chunks_scene.instantiate()
-						chunks[t][pos].generate(self, pos, mins, maxs)
-					chunks[t][pos].draw(pos, points, lod)
-				chunks_lod[t][pos] = 0 if lod == resolution and points.size() == 0 else lod
+						chunks[t][pos].init(self, pos, mins, maxs)
+					chunks[t][pos].update(data, lod)
+				chunks_lod[t][pos] = 0 if lod == resolution and data.size() == 0 else lod
 
 func _ready():
 	# Spawn the player above ground level
@@ -103,7 +85,7 @@ func _ready():
 	var player_scene_instance = player_scene.instantiate()
 	add_child(player_scene_instance)
 	player = player_scene_instance.get_node("Player")
-	player.position = Vector3(0, density.x * 2, 0)
+	player.position = player_pos
 	player_chunk = Vector3(INF, INF, INF)
 
 func _enter_tree():
