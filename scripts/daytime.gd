@@ -18,7 +18,7 @@ func _ready():
 
 func _process(delta):
 	# Jump to sunrise or moonrise
-	if Input.is_key_pressed(KEY_Q):
+	if Input.is_key_pressed(KEY_Z):
 		seek(0.275, true)
-	if Input.is_key_pressed(KEY_E):
+	if Input.is_key_pressed(KEY_X):
 		seek(0.825, true)

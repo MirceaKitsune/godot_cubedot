@@ -24,6 +24,12 @@ func _process(delta):
 	if Input.is_key_pressed(KEY_ESCAPE):
 		get_tree().quit()
 
+	# Toggle the light
+	if Input.is_key_pressed(KEY_E):
+		get_node("PlayerLight").visible = true
+	if Input.is_key_pressed(KEY_Q):
+		get_node("PlayerLight").visible = false
+
 	# Set view modes for debugging
 	if Input.is_key_pressed(KEY_F1):
 		get_viewport().set_debug_draw(get_viewport().DEBUG_DRAW_DISABLED);

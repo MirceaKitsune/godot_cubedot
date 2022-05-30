@@ -1,24 +1,32 @@
 extends Node3D
 
-@export var distance = 256
-@export var chunk_size = 16
-@export var lod_levels = 4
 @export var density = Vector2(64, 1024)
-@export var resolution = 1
+@export var resolution = 0.5
 @export var size = 128
 @export var threads = -1
 
-var scene: Resource
+const view_profiles = [
+	{ at_threads = 0, distance = 16, chunk = Vector3(2, 1, 2), lod = [1] },
+	{ at_threads = 2, distance = 32, chunk = Vector3(2, 1, 2), lod = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2] },
+	{ at_threads = 4, distance = 64, chunk = Vector3(4, 2, 4), lod = [1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4] },
+	{ at_threads = 8, distance = 128, chunk = Vector3(8, 4, 8), lod = [1, 1, 1, 2, 2, 2, 4, 4, 4, 4, 8, 8] },
+	{ at_threads = 16, distance = 256, chunk = Vector3(16, 8, 16), lod = [1, 1, 2, 2, 4, 4, 4, 4, 8, 8, 8, 8] },
+	{ at_threads = 32, distance = 512, chunk = Vector3(32, 16, 32), lod = [1, 1, 2, 4, 4, 4, 8, 8, 8, 8, 16, 16] },
+	{ at_threads = 64, distance = 1024, chunk = Vector3(64, 32, 64), lod = [1, 2, 4, 4, 8, 8, 8, 8, 16, 16, 16, 16] }
+]
+
 var mins: Vector3i
 var maxs: Vector3i
 var chunks: Array
 var chunks_lod: Array
-var view_sphere: Array
+var chunks_scene: Resource
+var sphere: Array
+var view: Dictionary
 
 var update_threads: Array
 var noise: FastNoiseLite
-var viewer: CharacterBody3D
-var viewer_pos: Vector3
+var player: CharacterBody3D
+var player_chunk: Vector3
 
 func _sort(a: Vector3, b: Vector3):
 	return a.distance_to(Vector3i(0, 0, 0)) < b.distance_to(Vector3i(0, 0, 0))
@@ -46,29 +54,37 @@ func _points(pos: Vector3, res: float):
 func _update(t: int):
 	# Detect if the viewer position changed while updating and restart the process if so
 	var pos_center = Vector3(INF, INF, INF)
-	while pos_center != viewer_pos:
-		pos_center = viewer_pos
+	while pos_center != player_chunk:
+		pos_center = player_chunk
 
-		# Add new chunks that are inside the view sphere
-		for pos_sphere in view_sphere:
-			if pos_center != viewer_pos:
+		# Remove existing chunks that are outside the view sphere
+		for pos in chunks[t].duplicate():
+			if pos_center != player_chunk:
 				break
 
-			# Attribute this chunk to a constant thread ID using its distance from the world center
+			var pos_sphere = pos - pos_center
+			if not sphere.has(pos_sphere):
+				if chunks[t].has(pos):
+					chunks[t][pos].queue_free()
+					chunks[t].erase(pos)
+				chunks_lod[t].erase(pos)
+
+		# Add new chunks that are inside the view sphere
+		for pos_sphere in sphere:
+			if pos_center != player_chunk:
+				break
+
+			# Attribute this chunk to a constant thread ID by using its position as an identifier
 			# This ensures no two threads ever modify the same chunk and avoids requiring a mutex
 			var pos = pos_sphere + pos_center
-			var pos_dist = pos.distance_to(Vector3i(0, 0, 0))
-			var tid = int(pos_dist) % max(1, threads)
+			var tid = int(pos.length()) % max(1, threads)
 			if t != tid:
 				continue
 
-			# LOD levels are raised by the power of two for optimal accuracy and performance
-			# As each time a chunk's LOD changes it must be processed again, fewer levels with large differences are best
+			# LOD level is picked from the view settings array based on distance
 			var lod_dist = pos_sphere.distance_to(Vector3i(0, 0, 0))
-			var lod_steps = floor(lod_dist / (distance / lod_levels))
-			var lod = resolution
-			for i in lod_steps:
-				lod += lod
+			var lod_index = floor(lod_dist / (view.distance / len(view.lod)))
+			var lod = view.lod[lod_index] * resolution
 
 			# Update this chunk if its LOD level changed
 			# Zero LOD is used to mark chunks as empty, this avoids recalculation if no points were found at the smallest resolution
@@ -76,31 +92,21 @@ func _update(t: int):
 				var points = _points(pos, lod)
 				if points.size() > 0:
 					if !chunks[t].has(pos):
-						chunks[t][pos] = scene.instantiate()
+						chunks[t][pos] = chunks_scene.instantiate()
 						chunks[t][pos].generate(self, pos, mins, maxs)
 					chunks[t][pos].draw(pos, points, lod)
 				chunks_lod[t][pos] = 0 if lod == resolution and points.size() == 0 else lod
 
-		# Remove existing chunks that are outside the view sphere
-		for pos in chunks[t].duplicate():
-			if pos_center != viewer_pos:
-				break
-
-			var pos_sphere = pos - pos_center
-			if not view_sphere.has(pos_sphere):
-				if chunks[t].has(pos):
-					chunks[t][pos].queue_free()
-					chunks[t].erase(pos)
-				chunks_lod[t].erase(pos)
+func _ready():
+	# Spawn the player above ground level
+	var player_scene = load("res://player.tscn")
+	var player_scene_instance = player_scene.instantiate()
+	add_child(player_scene_instance)
+	player = player_scene_instance.get_node("Player")
+	player.position = Vector3(0, density.x * 2, 0)
+	player_chunk = Vector3(INF, INF, INF)
 
 func _enter_tree():
-	var size_half = int(round(chunk_size / 2))
-	mins = Vector3i(-size_half, -size_half, -size_half)
-	maxs = Vector3i(+size_half, +size_half, +size_half)
-	scene = load("res://chunk.tscn")
-	viewer = get_node("Player")
-	viewer_pos = Vector3(INF, INF, INF)
-
 	# Configure the number of threads based on the thread count setting and system capabilities
 	# -1 = Automatic, 0 = Disabled, 1+ = Fixed count
 	threads = (OS.get_processor_count() if threads < 0 else threads) if OS.can_use_threads() else 0
@@ -110,32 +116,41 @@ func _enter_tree():
 		chunks.append({})
 		chunks_lod.append({})
 
-	# Setup the noise used to generate terrain
+	# Choose an appropriate view profile based on the number of threads available
+	view = view_profiles[0]
+	for vp in view_profiles:
+		if threads >= vp.at_threads:
+			view = vp
+
+	# Setup chunks and the noise used for terrain generation
 	var seed = randi()
 	noise = FastNoiseLite.new()
 	noise.noise_type = noise.TYPE_SIMPLEX
 	noise.seed = seed
 	noise.frequency = 1.0 / size
+	mins = view.chunk / -2
+	maxs = view.chunk / +2
+	chunks_scene = load("res://chunk.tscn")
 	print("Started new world with seed ", seed, " running on ", threads, " threads.")
 
 	# Configure the virtual sphere of chunk positions visible from the player's POV
 	# Each position is calculated against the active chunk to decide what to spawn
 	# The list is sorted so points closest to the camera are processed first
-	for x in range(-distance, distance, chunk_size):
-		for y in range(-distance, distance, chunk_size):
-			for z in range(-distance, distance, chunk_size):
+	for x in range(-view.distance, view.distance, view.chunk.x):
+		for y in range(-view.distance, view.distance, view.chunk.y):
+			for z in range(-view.distance, view.distance, view.chunk.z):
 				var pos = Vector3(x, y, z)
 				var dist = pos.distance_to(Vector3i(0, 0, 0))
-				if dist < distance:
-					view_sphere.append(pos)
-	view_sphere.sort_custom(_sort)
+				if dist < view.distance:
+					sphere.append(pos)
+	sphere.sort_custom(_sort)
 
 func _process(_delta):
 	# View updates are preformed when the player moves into a new chunk
 	# This greatly improves performance while providing a good level of accuracy
-	var pos_chunk = viewer.position.snapped(maxs - mins)
-	if viewer_pos != pos_chunk:
-		viewer_pos = pos_chunk
+	var pos_chunk = player.position.snapped(maxs - mins)
+	if player_chunk != pos_chunk:
+		player_chunk = pos_chunk
 
 		# Start the generator threads, if multithreading is disabled run updates on the main thread instead
 		if threads == 0:

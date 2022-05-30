@@ -26,5 +26,5 @@ func draw(pos: Vector3, points: Dictionary, res: float):
 	var vox = Voxel.new(mins, maxs)
 	var mesh = vox.generate(points, res)
 	var mesh_collision = mesh.create_trimesh_shape()
-	node.call_deferred("set_mesh", mesh)
-	node_body_collisions.call_deferred("set_shape", mesh_collision)
+	node.set_mesh(mesh)
+	node_body_collisions.set_shape(mesh_collision)
