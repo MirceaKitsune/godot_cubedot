@@ -31,6 +31,10 @@ run/main_scene="res://world.tscn"
 config/icon="res://icon.png"
 config/features=PackedStringArray("4.0", "Vulkan Clustered")
 
+[autoload]
+
+Data="*res://scripts/data.gd"
+
 [rendering]
 
 occlusion_culling/use_occlusion_culling=true

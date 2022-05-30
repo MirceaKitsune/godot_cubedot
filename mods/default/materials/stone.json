@@ -1,0 +1,12 @@
+{
+	"name": "stone",
+	"layer": 0,
+	"lod": 16,
+	"generate": {
+		"resolution_horizontal": 1,
+		"resolution_vertical": 1,
+		"density_min": null,
+		"density_max": 1,
+		"offset": 0
+	}
+}

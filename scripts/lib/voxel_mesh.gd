@@ -69,29 +69,40 @@ func generate(points: Dictionary, res: float):
 	# Faces are stored in slices each representing the virtual 2D plane the faces occupy
 	var hres = res / 2
 	var slices: Dictionary
-	for p in points:
+	for pos in points:
 		# Points outside of chunk boundaries can't produce faces, they only exist to check neighbors
-		if p.x < mins.x or p.x >= maxs.x or p.y < mins.y or p.y >= maxs.y or p.z < mins.z or p.z >= maxs.z:
+		if pos.x < mins.x or pos.x >= maxs.x or pos.y < mins.y or pos.y >= maxs.y or pos.z < mins.z or pos.z >= maxs.z:
 			continue
 
+		# Determine if this material should be accounted for at the current resolution
+		var name = points[pos]
+		if Data.materials[name].lod and Data.materials[name].lod < res:
+			continue
+
+		# Look for neighbors in all directions (up, down, left, right, forward, backward)
+		# If a voxel of the same layer isn't found this is an empty space, draw a face between the two
 		for d in len(DIR):
-			var pos = p + (DIR[d] * res)
-			if points.has(pos) and points[pos] > 0:
+			var dir_pos = pos + (DIR[d] * res)
+			if points.has(dir_pos) and Data.materials[points[dir_pos]].layer == Data.materials[name].layer and !(Data.materials[points[dir_pos]].lod and Data.materials[points[dir_pos]].lod < res):
 				continue
 
+			# Faces are stored on virtual sheets in each direction ensuring only identical faces are matched
 			# Slices range between 0 and the maximum chunk size, negative entries represent inverted faces
-			var center = p + (DIR[d] * hres)
+			# Each slice is indexed by a material name, eg: slice["material"][Vector3(-1, 0, +1)][0]
+			var center = pos + (DIR[d] * hres)
 			var size = Vector2(hres, hres)
 			var slice = (maxs + center) * DIR[d]
-			if !slices.has(slice):
-				slices[slice] = []
+			if !slices.has(name):
+				slices[name] = {}
+			if !slices[name].has(slice):
+				slices[name][slice] = []
 
 			# If face optimization is enabled, two scans are preformed through existing faces to detect and merge frontal then lateral matches
 			# If a face that connects to the new face is detected, the old face is positioned and scaled to fill the gap, otherwise a new face is created
 			var q = Quad.new(center, size, d)
 			if optimize:
 				# Match frontally (across size X)
-				for face in slices[slice]:
+				for face in slices[name][slice]:
 					# Facing in X, parallel in Y, touching in Z
 					if (face.dir == 0 or face.dir == 1) and (q.mins.y == face.mins.y and q.maxs.y == face.maxs.y) and (q.mins.z == face.maxs.z or q.maxs.z == face.mins.z):
 						var new_pos = q.pos + Vector3(0, 0, -face.size.y if q.pos.z > face.pos.z else +face.size.y)
@@ -110,10 +121,10 @@ func generate(points: Dictionary, res: float):
 						var new_size = q.size + Vector2(0, face.size.y)
 						q = face
 						q.update(new_pos, new_size, d)
-				slices[slice].erase(q)
+				slices[name][slice].erase(q)
 
 				# Match laterally (across size Y)
-				for face in slices[slice]:
+				for face in slices[name][slice]:
 					# Facing in X, parallel in Z, touching in Y
 					if (face.dir == 0 or face.dir == 1) and (q.mins.z == face.mins.z and q.maxs.z == face.maxs.z) and (q.mins.y == face.maxs.y or q.maxs.y == face.mins.y):
 						var new_pos = q.pos + Vector3(0, -face.size.x if q.pos.y > face.pos.y else +face.size.x, 0)
@@ -132,17 +143,18 @@ func generate(points: Dictionary, res: float):
 						var new_size = q.size + Vector2(face.size.x, 0)
 						q = face
 						q.update(new_pos, new_size, d)
-				slices[slice].erase(q)
-			slices[slice].append(q)
+				slices[name][slice].erase(q)
+			slices[name][slice].append(q)
 
 	# Generate triangles and return the mesh
 	var arr_mesh = ArrayMesh.new()
 	_surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for slice in slices:
-		for face in slices[slice]:
-			var f = face.get_tris()
-			_surface_tool.add_triangle_fan(PackedVector3Array(f.tc1), PackedVector2Array(f.tu1))
-			_surface_tool.add_triangle_fan(PackedVector3Array(f.tc2), PackedVector2Array(f.tu2))
+	for name in slices:
+		for slice in slices[name]:
+			for face in slices[name][slice]:
+				var f = face.get_tris()
+				_surface_tool.add_triangle_fan(PackedVector3Array(f.tc1), PackedVector2Array(f.tu1))
+				_surface_tool.add_triangle_fan(PackedVector3Array(f.tc2), PackedVector2Array(f.tu2))
 	_surface_tool.index()
 	_surface_tool.generate_normals()
 	_surface_tool.commit(arr_mesh)

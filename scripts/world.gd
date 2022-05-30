@@ -1,10 +1,6 @@
 extends Node3D
 
-@export var resolution_generator = Vector3(1, 0.5, 1)
-@export var resolution = 0.5
-@export var size = 128
 @export var threads = -1
-@export var player_pos = Vector3(0, 128, 0)
 
 const view_profiles = [
 	{ at_threads = 0, distance = 16, chunk = Vector3(2, 1, 2), lod = [1] },
@@ -65,7 +61,7 @@ func _update(t: int):
 			# LOD level is picked from the view settings array based on distance
 			var lod_dist = pos_sphere.distance_to(Vector3i(0, 0, 0))
 			var lod_index = floor(lod_dist / (view.distance / len(view.lod)))
-			var lod = view.lod[lod_index] * resolution
+			var lod = view.lod[lod_index] * Data.settings.resolution
 
 			# Update this chunk if its LOD level changed
 			# Zero LOD is used to mark chunks as empty, this avoids recalculation if no points were found at the smallest resolution
@@ -77,7 +73,7 @@ func _update(t: int):
 						chunks[t][pos] = chunks_scene.instantiate()
 						chunks[t][pos].init(self, pos, mins, maxs)
 					chunks[t][pos].update(data, lod)
-				chunks_lod[t][pos] = 0 if lod == resolution and data.size() == 0 else lod
+				chunks_lod[t][pos] = 0 if lod == Data.settings.resolution and data.size() == 0 else lod
 
 func _ready():
 	# Spawn the player above ground level
@@ -85,7 +81,7 @@ func _ready():
 	var player_scene_instance = player_scene.instantiate()
 	add_child(player_scene_instance)
 	player = player_scene_instance.get_node("Player")
-	player.position = player_pos
+	player.position = Vector3(0, Data.settings.generate_density_up * 2, 0)
 	player_chunk = Vector3(INF, INF, INF)
 
 func _enter_tree():
@@ -109,7 +105,7 @@ func _enter_tree():
 	noise = FastNoiseLite.new()
 	noise.noise_type = noise.TYPE_SIMPLEX
 	noise.seed = seed
-	noise.frequency = 1.0 / size
+	noise.frequency = 1.0 / Data.settings.generate_size
 	mins = view.chunk / -2
 	maxs = view.chunk / +2
 	chunks_scene = load("res://chunk.tscn")
