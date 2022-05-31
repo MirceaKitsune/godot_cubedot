@@ -1,5 +1,6 @@
 {
 	"name": "stone",
+	"material": "solids",
 	"layer": 0,
 	"lod": 16,
 	"generate": {

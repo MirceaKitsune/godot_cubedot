@@ -1,5 +1,6 @@
 {
 	"name": "dirt",
+	"material": "solids",
 	"layer": 0,
 	"lod": 0,
 	"generate": {

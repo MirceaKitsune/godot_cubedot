@@ -23,11 +23,11 @@ func _generate(pos: Vector3, res: float):
 	# Find all materials with a generator definition
 	# For performance and consistency materials with the largest resolution are picked first
 	# This ensures less noise checks are performed while mitigating the risk of missing surfaces
-	var mats = []
-	for mat in Data.materials:
-		if Data.materials[mat].generate:
-			mats.append(Data.materials[mat])
-	mats.sort_custom(_sort_materials)
+	var nodes = []
+	for node in Data.nodes:
+		if Data.nodes[node].generate:
+			nodes.append(Data.nodes[node])
+	nodes.sort_custom(_sort_materials)
 
 	# A margin of 1 extra unit is added to the start and end of the iteration
 	# This lets the mesh generator know the positions of direct neighbor voxels from neighboring chunks
@@ -37,15 +37,16 @@ func _generate(pos: Vector3, res: float):
 	for x in range(points_mins.x - 1, points_maxs.x + 1):
 		for y in range(points_mins.y - 1, points_maxs.y + 1):
 			for z in range(points_mins.z - 1, points_maxs.z + 1):
-				for mat in mats:
+				for node in nodes:
 					var vec = Vector3(x, y, z) * res
-					var vec_resolution = Vector3(mat.generate.resolution_horizontal, mat.generate.resolution_vertical, mat.generate.resolution_horizontal)
+					var vec_resolution = Vector3(node.generate.resolution_horizontal, node.generate.resolution_vertical, node.generate.resolution_horizontal)
 					var vec_point = vec.snapped(vec_resolution)
-					var vec_point_offset = Vector3(0, mat.generate.offset, 0) if mat.generate.offset else Vector3(0, 0, 0)
+					var vec_point_offset = Vector3(0, node.generate.offset, 0) if node.generate.offset else Vector3(0, 0, 0)
 					var n = _generate_noise(pos + vec_point - vec_point_offset)
-					if (!mat.generate.density_min or n >= mat.generate.density_min) and (!mat.generate.density_max or n <= mat.generate.density_max):
-						points[vec] = mat.name
+					if (!node.generate.density_min or n >= node.generate.density_min) and (!node.generate.density_max or n <= node.generate.density_max):
+						points[vec] = node.name
 						break
+	noise_cache = {}
 	return points
 
 func read(pos: Vector3, res: float):

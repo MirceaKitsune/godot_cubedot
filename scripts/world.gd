@@ -65,15 +65,12 @@ func _update(t: int):
 
 			# Update this chunk if its LOD level changed
 			# Zero LOD is used to mark chunks as empty, this avoids recalculation if no points were found at the smallest resolution
-			if not chunks_lod[t].has(pos) or (chunks_lod[t][pos] > 0 and chunks_lod[t][pos] != lod):
-				var voxel_data = VoxelData.new(noise, mins, maxs)
-				var data = voxel_data.read(pos, lod)
-				if data.size() > 0:
-					if !chunks[t].has(pos):
-						chunks[t][pos] = chunks_scene.instantiate()
-						chunks[t][pos].init(self, pos, mins, maxs)
-					chunks[t][pos].update(data, lod)
-				chunks_lod[t][pos] = 0 if lod == Data.settings.resolution and data.size() == 0 else lod
+			if not chunks_lod[t].has(pos) or chunks_lod[t][pos] != lod:
+				if !chunks[t].has(pos):
+					chunks[t][pos] = chunks_scene.instantiate()
+					chunks[t][pos].init(self, pos, mins, maxs, noise)
+				chunks[t][pos].update(pos, lod)
+				chunks_lod[t][pos] = lod
 
 func _ready():
 	# Spawn the player above ground level

@@ -11,8 +11,9 @@ Mod data is stored under the mods subdirectory, active mods are loaded in alphab
 	- generate_density_up: The density of terrain noise increases by this amount the higher up you go. Lower values result in taller cliffs.
 	- generate_density_down: The density of terrain noise decreases by this amount the lower down you go. Lower values result in deeper valleys.
 
-- mod/materials: JSON definitions of voxel types. Each file represents an unique material. Options include:
+- mod/nodes: JSON definitions of voxel types. Each file represents an unique node. Options include:
 	- name: The unique name of this material, eg: "dirt"
+	- material: The material file from "mod/materials" used by this node. Different materials will generate different meshes so be mindful of the performance impact.
 	- layer: The layer this material is rendered on. Faces between materials on the same layer are hidden to improve performance. This should only be non-zero for transparent surfaces of different types.
 	- lod: This material is ignored if a chunk is rendered beyond this resolution. Increases performance by not generating more faces at a distance. Use lower numbers if the material is less noticeable and won't look bad by popping in and out of view.
 	- generate: When present this material is used by the terrain generator and will appear in the world. Contains the following settings:
