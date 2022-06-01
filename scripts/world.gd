@@ -1,6 +1,7 @@
 extends Node3D
 
 @export var threads = -1
+@export var seed = randi()
 
 const view_profiles = [
 	{ at_threads = 0, distance = 16, chunk = Vector3(2, 1, 2), lod = [1] },
@@ -21,7 +22,6 @@ var sphere: Array
 var view: Dictionary
 
 var update_threads: Array
-var noise: FastNoiseLite
 var player: CharacterBody3D
 var player_chunk: Vector3
 
@@ -68,7 +68,7 @@ func _update(t: int):
 			if not chunks_lod[t].has(pos) or chunks_lod[t][pos] != lod:
 				if !chunks[t].has(pos):
 					chunks[t][pos] = chunks_scene.instantiate()
-					chunks[t][pos].init(self, pos, mins, maxs, noise)
+					chunks[t][pos].init(self, pos, mins, maxs, seed)
 				chunks[t][pos].update(pos, lod)
 				chunks_lod[t][pos] = lod
 
@@ -78,13 +78,14 @@ func _ready():
 	var player_scene_instance = player_scene.instantiate()
 	add_child(player_scene_instance)
 	player = player_scene_instance.get_node("Player")
-	player.position = Vector3(0, Data.settings.generate_density_up * 2, 0)
+	player.position = Vector3(0, Data.settings.mapgen.density_up * 2, 0)
 	player_chunk = Vector3(INF, INF, INF)
 
 func _enter_tree():
 	# Configure the number of threads based on the thread count setting and system capabilities
+	# By default only half of the available cores are used to avoid impacting system performance
 	# -1 = Automatic, 0 = Disabled, 1+ = Fixed count
-	threads = (OS.get_processor_count() if threads < 0 else threads) if OS.can_use_threads() else 0
+	threads = (int(OS.get_processor_count() / 2) if threads < 0 else threads) if OS.can_use_threads() else 0
 	for i in threads:
 		update_threads.append(Thread.new())
 	for i in max(1, threads):
@@ -97,12 +98,6 @@ func _enter_tree():
 		if threads >= vp.at_threads:
 			view = vp
 
-	# Setup chunks and the noise used for terrain generation
-	var seed = randi()
-	noise = FastNoiseLite.new()
-	noise.noise_type = noise.TYPE_SIMPLEX
-	noise.seed = seed
-	noise.frequency = 1.0 / Data.settings.generate_size
 	mins = view.chunk / -2
 	maxs = view.chunk / +2
 	chunks_scene = load("res://chunk.tscn")

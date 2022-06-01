@@ -1,7 +1,9 @@
 {
 	"name": "Default",
 	"resolution": 0.5,
-	"generate_size": 128,
-	"generate_density_up": 64,
-	"generate_density_down": 1024
+	"mapgen": {
+		"size": 128,
+		"density_up": 64,
+		"density_down": 1024
+	}
 }

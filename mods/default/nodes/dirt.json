@@ -1,13 +1,13 @@
 {
 	"name": "dirt",
-	"material": "solids",
+	"material": "dirt",
 	"layer": 0,
-	"lod": 0,
-	"generate": {
+	"lod": 4,
+	"mapgen": {
 		"resolution_horizontal": 1,
 		"resolution_vertical": 0.5,
 		"density_min": null,
 		"density_max": 1,
-		"offset": 1
+		"top": 1
 	}
 }
