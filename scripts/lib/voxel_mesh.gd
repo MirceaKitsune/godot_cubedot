@@ -34,18 +34,69 @@ class Quad extends RefCounted:
 			mins = pos + Vector3(-size.x, -size.y, 0)
 			maxs = pos + Vector3(+size.x, +size.y, 0)
 
-	func get_tris():
+	func get_tris(res: float):
 		var c: PackedVector3Array
 		var u: PackedVector2Array
+		var u_point_ofs = 0.5 - (res / 2) if res < 0.5 else res / 2
+		var u_point_scale = 1 / Data.settings.resolution_texture
+		var u_scale = Vector2(size.x * 2 * u_point_scale, size.y * 2 * u_point_scale)
 		if dir == 0 or dir == 1:
-			c = [pos + Vector3(0, -size.x, -size.y), pos + Vector3(0, -size.x, +size.y), pos + Vector3(0, +size.x, -size.y), pos + Vector3(0, +size.x, +size.y)]
-			u = [Vector2(c[0].y, c[0].z), Vector2(c[1].y, c[1].z), Vector2(c[2].y, c[2].z), Vector2(c[3].y, c[3].z)]
+			var u_ofs = Vector2((pos.y - size.x - u_point_ofs) * u_point_scale, (pos.z - size.y - u_point_ofs) * u_point_scale)
+			c = [
+				pos + Vector3(0, -size.x, -size.y),
+				pos + Vector3(0, -size.x, +size.y),
+				pos + Vector3(0, +size.x, -size.y),
+				pos + Vector3(0, +size.x, +size.y)
+			]
+			u = [
+				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x),
+				Vector2(u_ofs.x, u_ofs.y),
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y)
+			] if dir == 0 else [
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x),
+				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y),
+				Vector2(u_ofs.x, u_ofs.y)
+			]
 		elif dir == 2 or dir == 3:
-			c = [pos + Vector3(-size.x, 0, -size.y), pos + Vector3(-size.x, 0, +size.y), pos + Vector3(+size.x, 0, -size.y), pos + Vector3(+size.x, 0, +size.y)]
-			u = [Vector2(c[0].x, c[0].z), Vector2(c[1].x, c[1].z), Vector2(c[2].x, c[2].z), Vector2(c[3].x, c[3].z)]
+			var u_ofs = Vector2((pos.x - size.x - u_point_ofs) * u_point_scale, (pos.z - size.y - u_point_ofs) * u_point_scale)
+			c = [
+				pos + Vector3(-size.x, 0, -size.y),
+				pos + Vector3(-size.x, 0, +size.y),
+				pos + Vector3(+size.x, 0, -size.y),
+				pos + Vector3(+size.x, 0, +size.y)
+			]
+			u = [
+				Vector2(u_ofs.x, u_ofs.y),
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y),
+				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x)
+			] if dir == 2 else [
+				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x),
+				Vector2(u_ofs.x, u_ofs.y),
+				Vector2(u_ofs.x + u_scale.y, u_ofs.y)
+			]
 		elif dir == 4 or dir == 5:
-			c = [pos + Vector3(-size.x, -size.y, 0), pos + Vector3(-size.x, +size.y, 0), pos + Vector3(+size.x, -size.y, 0), pos + Vector3(+size.x, +size.y, 0)]
-			u = [Vector2(c[0].x, c[0].y), Vector2(c[1].x, c[1].y), Vector2(c[2].x, c[2].y), Vector2(c[3].x, c[3].y)]
+			var u_ofs = Vector2((pos.x - size.x - u_point_ofs) * u_point_scale, (pos.y - size.y - u_point_ofs) * u_point_scale)
+			c = [
+				pos + Vector3(-size.x, -size.y, 0),
+				pos + Vector3(-size.x, +size.y, 0),
+				pos + Vector3(+size.x, -size.y, 0),
+				pos + Vector3(+size.x, +size.y, 0)
+			]
+			u = [
+				Vector2(u_ofs.x + u_scale.x, u_ofs.y + u_scale.y),
+				Vector2(u_ofs.x + u_scale.x, u_ofs.y),
+				Vector2(u_ofs.x, u_ofs.y + u_scale.y),
+				Vector2(u_ofs.x, u_ofs.y)
+			] if dir == 4 else [
+				Vector2(u_ofs.x, u_ofs.y + u_scale.y),
+				Vector2(u_ofs.x, u_ofs.y),
+				Vector2(u_ofs.x + u_scale.x, u_ofs.y + u_scale.y),
+				Vector2(u_ofs.x + u_scale.x, u_ofs.y)
+			]
 
 		var invert = dir == 1 or dir == 2 or dir == 5
 		var tc1: PackedVector3Array
@@ -73,7 +124,6 @@ func generate(points: Dictionary, res: float):
 
 		# Determine if this material should be accounted for at the current resolution
 		var name = points[pos]
-		var mesh = Data.nodes[name].material
 		if Data.nodes[name].lod and Data.nodes[name].lod < res:
 			continue
 
@@ -84,23 +134,37 @@ func generate(points: Dictionary, res: float):
 			if points.has(dir_pos) and Data.nodes[points[dir_pos]].layer == Data.nodes[name].layer and !(Data.nodes[points[dir_pos]].lod and Data.nodes[points[dir_pos]].lod < res):
 				continue
 
+			# Find the material for this direction in the settings
+			var materials = Data.nodes[name].material
+			var mat = materials[0]
+			if d == 1 and len(materials) > 5:
+				mat = materials[5]
+			if d == 0 and len(materials) > 4:
+				mat = materials[4]
+			if d == 5 and len(materials) > 3:
+				mat = materials[3]
+			if d == 4 and len(materials) > 2:
+				mat = materials[2]
+			if d == 3 and len(materials) > 1:
+				mat = materials[1]
+
 			# Faces are stored on virtual sheets in each direction ensuring only identical faces are matched
 			# Slices range between 0 and the maximum chunk size, negative entries represent inverted faces
-			# Each slice is indexed by mesh and material name, eg: slice["solids"]["dirt"][Vector3(-1, 0, +1)]
+			# Each slice is indexed by material name, eg: slice["dirt"][Vector3(-1, 0, +1)]
 			var center = pos + (DIR[d] * hres)
 			var size = Vector2(hres, hres)
 			var slice = (maxs + center) * DIR[d]
-			if !slices.has(mesh):
-				slices[mesh] = {}
-			if !slices[mesh].has(slice):
-				slices[mesh][slice] = []
+			if !slices.has(mat):
+				slices[mat] = {}
+			if !slices[mat].has(slice):
+				slices[mat][slice] = []
 
 			# If face optimization is enabled, two scans are preformed through existing faces to detect and merge frontal then lateral matches
 			# If a face that connects to the new face is detected, the old face is positioned and scaled to fill the gap, otherwise a new face is created
 			var q = Quad.new(center, size, d)
 			if optimize:
 				# Match frontally (across size X)
-				for face in slices[mesh][slice]:
+				for face in slices[mat][slice]:
 					# Facing in X, parallel in Y, touching in Z
 					if (face.dir == 0 or face.dir == 1) and (q.mins.y == face.mins.y and q.maxs.y == face.maxs.y) and (q.mins.z == face.maxs.z or q.maxs.z == face.mins.z):
 						var new_pos = q.pos + Vector3(0, 0, -face.size.y if q.pos.z > face.pos.z else +face.size.y)
@@ -119,10 +183,10 @@ func generate(points: Dictionary, res: float):
 						var new_size = q.size + Vector2(0, face.size.y)
 						q = face
 						q.update(new_pos, new_size, d)
-				slices[mesh][slice].erase(q)
+				slices[mat][slice].erase(q)
 
 				# Match laterally (across size Y)
-				for face in slices[mesh][slice]:
+				for face in slices[mat][slice]:
 					# Facing in X, parallel in Z, touching in Y
 					if (face.dir == 0 or face.dir == 1) and (q.mins.z == face.mins.z and q.maxs.z == face.maxs.z) and (q.mins.y == face.maxs.y or q.maxs.y == face.mins.y):
 						var new_pos = q.pos + Vector3(0, -face.size.x if q.pos.y > face.pos.y else +face.size.x, 0)
@@ -141,8 +205,8 @@ func generate(points: Dictionary, res: float):
 						var new_size = q.size + Vector2(face.size.x, 0)
 						q = face
 						q.update(new_pos, new_size, d)
-				slices[mesh][slice].erase(q)
-			slices[mesh][slice].append(q)
+				slices[mat][slice].erase(q)
+			slices[mat][slice].append(q)
 
 	# Generate triangles and return the meshes
 	var am = ArrayMesh.new()
@@ -151,7 +215,7 @@ func generate(points: Dictionary, res: float):
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		for slice in slices[mesh]:
 			for face in slices[mesh][slice]:
-				var f = face.get_tris()
+				var f = face.get_tris(res)
 				st.add_triangle_fan(PackedVector3Array(f.tc1), PackedVector2Array(f.tu1))
 				st.add_triangle_fan(PackedVector3Array(f.tc2), PackedVector2Array(f.tu2))
 		st.index()

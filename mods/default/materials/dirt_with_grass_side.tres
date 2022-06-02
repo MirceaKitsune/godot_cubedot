@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://rdqaa05asc8f"]
+
+[ext_resource type="Texture2D" uid="uid://dfv41ycqxd8ia" path="res://mods/default/textures/dirt_with_grass_side.tga" id="1_yfok0"]
+
+[resource]
+albedo_texture = ExtResource( "1_yfok0" )
+texture_filter = 0

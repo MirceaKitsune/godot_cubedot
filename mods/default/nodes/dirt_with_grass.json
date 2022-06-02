@@ -1,0 +1,13 @@
+{
+	"name": "dirt_with_grass",
+	"material": ["dirt", "dirt_with_grass_top", "dirt_with_grass_side", "dirt_with_grass_side", "dirt_with_grass_side", "dirt_with_grass_side"],
+	"layer": 0,
+	"lod": 4,
+	"mapgen": {
+		"resolution_horizontal": 1,
+		"resolution_vertical": 1,
+		"density_min": null,
+		"density_max": 1,
+		"top": 5
+	}
+}

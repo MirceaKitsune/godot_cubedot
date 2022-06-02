@@ -1,6 +1,8 @@
 {
 	"name": "Default",
-	"resolution": 0.5,
+	"seed": 1274302422,
+	"resolution": 1,
+	"resolution_texture": 1,
 	"mapgen": {
 		"size": 128,
 		"density_up": 64,

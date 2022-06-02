@@ -1,6 +1,6 @@
 {
 	"name": "stone",
-	"material": "stone",
+	"material": ["stone"],
 	"layer": 0,
 	"lod": 16,
 	"mapgen": {

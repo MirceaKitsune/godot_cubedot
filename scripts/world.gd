@@ -1,18 +1,18 @@
 extends Node3D
 
 @export var threads = -1
-@export var seed = randi()
 
 const view_profiles = [
-	{ at_threads = 0, distance = 16, chunk = Vector3(2, 1, 2), lod = [1] },
-	{ at_threads = 2, distance = 32, chunk = Vector3(2, 1, 2), lod = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2] },
-	{ at_threads = 4, distance = 64, chunk = Vector3(4, 2, 4), lod = [1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4] },
-	{ at_threads = 8, distance = 128, chunk = Vector3(8, 4, 8), lod = [1, 1, 1, 2, 2, 2, 4, 4, 4, 4, 8, 8] },
-	{ at_threads = 16, distance = 256, chunk = Vector3(16, 8, 16), lod = [1, 1, 2, 2, 4, 4, 4, 4, 8, 8, 8, 8] },
-	{ at_threads = 32, distance = 512, chunk = Vector3(32, 16, 32), lod = [1, 1, 2, 4, 4, 4, 8, 8, 8, 8, 16, 16] },
-	{ at_threads = 64, distance = 1024, chunk = Vector3(64, 32, 64), lod = [1, 2, 4, 4, 8, 8, 8, 8, 16, 16, 16, 16] }
+	{at_threads = 0, distance = 16, chunk = Vector3(2, 1, 2), lod = [1]},
+	{at_threads = 2, distance = 32, chunk = Vector3(2, 1, 2), lod = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2]},
+	{at_threads = 4, distance = 64, chunk = Vector3(4, 2, 4), lod = [1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4]},
+	{at_threads = 8, distance = 128, chunk = Vector3(8, 4, 8), lod = [1, 1, 1, 2, 2, 2, 4, 4, 4, 4, 6, 6]},
+	{at_threads = 16, distance = 256, chunk = Vector3(16, 8, 16), lod = [1, 1, 2, 2, 4, 4, 4, 4, 6, 6, 6, 6]},
+	{at_threads = 32, distance = 512, chunk = Vector3(32, 16, 32), lod = [1, 1, 2, 4, 4, 4, 6, 6, 6, 6, 8, 8]},
+	{at_threads = 64, distance = 1024, chunk = Vector3(64, 32, 64), lod = [1, 2, 4, 4, 6, 6, 6, 6, 8, 8, 8, 8]}
 ]
 
+var seed = Data.settings.seed if Data.settings.seed >= 0 else randi()
 var mins: Vector3i
 var maxs: Vector3i
 var chunks: Array
