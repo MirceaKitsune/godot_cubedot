@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://ftfh8sbb7xtb"]
+
+[ext_resource type="Texture2D" uid="uid://chwlo0c18xsvt" path="res://mods/default/textures/default.tga" id="1_shooo"]
+
+[resource]
+albedo_texture = ExtResource( "1_shooo" )
+texture_filter = 0

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chwlo0c18xsvt"
-path="res://.godot/imported/default.tga-3a6dddae891f5704019d315793cf4f65.ctex"
+uid="uid://cg1kq1k6ubdd8"
+path="res://.godot/imported/stone_diff.tga-7f5728e1e48bb64a99b1a7c6ccb19af4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/default.tga"
-dest_files=["res://.godot/imported/default.tga-3a6dddae891f5704019d315793cf4f65.ctex"]
+source_file="res://mods/default/textures/stone_diff.tga"
+dest_files=["res://.godot/imported/stone_diff.tga-7f5728e1e48bb64a99b1a7c6ccb19af4.ctex"]
 
 [params]
 

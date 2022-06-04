@@ -1,7 +1,19 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bmvlpt2hejqch"]
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://dcqlcxv2ng14j"]
 
-[ext_resource type="Texture2D" uid="uid://cg1kq1k6ubdd8" path="res://mods/default/textures/stone.tga" id="1_ek5jl"]
+[ext_resource type="Texture2D" uid="uid://cg1kq1k6ubdd8" path="res://mods/default/textures/stone_diff.tga" id="1_jj220"]
+[ext_resource type="Texture2D" uid="uid://bfg6awo5kr7jf" path="res://mods/default/textures/stone_depth.tga" id="2_ef4wp"]
+[ext_resource type="Texture2D" uid="uid://cxtxjo0j7t4wd" path="res://mods/default/textures/stone_norm.tga" id="2_lifl3"]
+[ext_resource type="Texture2D" uid="uid://dbic10hcs004g" path="res://mods/default/textures/dirt_rough.tga" id="4_t37tw"]
 
 [resource]
-albedo_texture = ExtResource( "1_ek5jl" )
+albedo_texture = ExtResource( "1_jj220" )
+roughness_texture = ExtResource( "4_t37tw" )
+normal_enabled = true
+normal_texture = ExtResource( "2_lifl3" )
+heightmap_enabled = true
+heightmap_scale = 0.1
+heightmap_deep_parallax = true
+heightmap_min_layers = 8
+heightmap_max_layers = 32
+heightmap_texture = ExtResource( "2_ef4wp" )
 texture_filter = 0

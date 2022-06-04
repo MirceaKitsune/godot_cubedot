@@ -14,6 +14,11 @@ var node: MeshInstance3D
 var node_body: StaticBody3D
 var node_body_collisions: CollisionShape3D
 
+func _ready():
+	node = get_node("Chunk")
+	node_body = node.get_node("ChunkBody")
+	node_body_collisions = node_body.get_node("ChunkBodyCollision")
+
 func init(parent: Node, p: Vector3i, min: Vector3i, max: Vector3i, s: int):
 	pos = p
 	mins = min
@@ -21,13 +26,6 @@ func init(parent: Node, p: Vector3i, min: Vector3i, max: Vector3i, s: int):
 	vm = VoxelMesh.new(mins, maxs)
 	vd = VoxelData.new(mins, maxs, s)
 	position = pos
-
-	node_body_collisions = CollisionShape3D.new()
-	node_body = StaticBody3D.new()
-	node = MeshInstance3D.new()
-	node_body.call_deferred("add_child", node_body_collisions)
-	node.call_deferred("add_child", node_body)
-	call_deferred("add_child", node)
 
 	parent.call_deferred("add_child", self)
 

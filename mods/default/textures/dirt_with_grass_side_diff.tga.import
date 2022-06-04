@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chwlo0c18xsvt"
-path="res://.godot/imported/default.tga-3a6dddae891f5704019d315793cf4f65.ctex"
+uid="uid://dfv41ycqxd8ia"
+path="res://.godot/imported/dirt_with_grass_side_diff.tga-8c329536c31acb684a8496126b78edd8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/default.tga"
-dest_files=["res://.godot/imported/default.tga-3a6dddae891f5704019d315793cf4f65.ctex"]
+source_file="res://mods/default/textures/dirt_with_grass_side_diff.tga"
+dest_files=["res://.godot/imported/dirt_with_grass_side_diff.tga-8c329536c31acb684a8496126b78edd8.ctex"]
 
 [params]
 

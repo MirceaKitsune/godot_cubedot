@@ -35,13 +35,15 @@ class Quad extends RefCounted:
 			maxs = pos + Vector3(+size.x, +size.y, 0)
 
 	func get_tris(res: float):
+		# c represents the 4 corners in 3D space, u represents the 4 UV coordinates in 2D space
+		# UV coordinates must be flipped and / or rotated per direction to ensure the texture always points up
+		# When rotating the coordinates, the X scale / offset is used in the Y field and vice versa
 		var c: PackedVector3Array
 		var u: PackedVector2Array
-		var u_point_ofs = 0.5 - (res / 2) if res < 0.5 else res / 2
-		var u_point_scale = 1 / Data.settings.resolution_texture
-		var u_scale = Vector2(size.x * 2 * u_point_scale, size.y * 2 * u_point_scale)
+		var u_scale_point = 1 / Data.settings.resolution_texture / res
+		var u_scale = Vector2(size.x * 2 * u_scale_point, size.y * 2 * u_scale_point)
 		if dir == 0 or dir == 1:
-			var u_ofs = Vector2((pos.y - size.x - u_point_ofs) * u_point_scale, (pos.z - size.y - u_point_ofs) * u_point_scale)
+			var u_ofs = Vector2((pos.y + size.x) * 4, (pos.z + size.y) * 4)
 			c = [
 				pos + Vector3(0, -size.x, -size.y),
 				pos + Vector3(0, -size.x, +size.y),
@@ -49,18 +51,18 @@ class Quad extends RefCounted:
 				pos + Vector3(0, +size.x, +size.y)
 			]
 			u = [
-				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x),
-				Vector2(u_ofs.x, u_ofs.y),
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y)
+				Vector2(u_ofs.y, u_ofs.x + u_scale.x),
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x + u_scale.x),
+				Vector2(u_ofs.y, u_ofs.x),
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x)
 			] if dir == 0 else [
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x),
-				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y),
-				Vector2(u_ofs.x, u_ofs.y)
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x + u_scale.x),
+				Vector2(u_ofs.y, u_ofs.x + u_scale.x),
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x),
+				Vector2(u_ofs.y, u_ofs.x)
 			]
 		elif dir == 2 or dir == 3:
-			var u_ofs = Vector2((pos.x - size.x - u_point_ofs) * u_point_scale, (pos.z - size.y - u_point_ofs) * u_point_scale)
+			var u_ofs = Vector2((pos.x + size.x) * 4, (pos.z + size.y) * 4)
 			c = [
 				pos + Vector3(-size.x, 0, -size.y),
 				pos + Vector3(-size.x, 0, +size.y),
@@ -68,18 +70,18 @@ class Quad extends RefCounted:
 				pos + Vector3(+size.x, 0, +size.y)
 			]
 			u = [
-				Vector2(u_ofs.x, u_ofs.y),
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y),
-				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x)
+				Vector2(u_ofs.y, u_ofs.x),
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x),
+				Vector2(u_ofs.y, u_ofs.x + u_scale.x),
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x + u_scale.x)
 			] if dir == 2 else [
-				Vector2(u_ofs.x, u_ofs.y + u_scale.x),
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y + u_scale.x),
-				Vector2(u_ofs.x, u_ofs.y),
-				Vector2(u_ofs.x + u_scale.y, u_ofs.y)
+				Vector2(u_ofs.y, u_ofs.x + u_scale.x),
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x + u_scale.x),
+				Vector2(u_ofs.y, u_ofs.x),
+				Vector2(u_ofs.y + u_scale.y, u_ofs.x)
 			]
 		elif dir == 4 or dir == 5:
-			var u_ofs = Vector2((pos.x - size.x - u_point_ofs) * u_point_scale, (pos.y - size.y - u_point_ofs) * u_point_scale)
+			var u_ofs = Vector2((pos.x + size.x) * 4, (pos.y + size.y) * 4)
 			c = [
 				pos + Vector3(-size.x, -size.y, 0),
 				pos + Vector3(-size.x, +size.y, 0),

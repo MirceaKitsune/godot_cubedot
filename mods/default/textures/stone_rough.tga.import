@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chwlo0c18xsvt"
-path="res://.godot/imported/default.tga-3a6dddae891f5704019d315793cf4f65.ctex"
+uid="uid://ea402rclgwxq"
+path="res://.godot/imported/stone_rough.tga-f339a37065e1472c17cdb305c0ab01cd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/default.tga"
-dest_files=["res://.godot/imported/default.tga-3a6dddae891f5704019d315793cf4f65.ctex"]
+source_file="res://mods/default/textures/stone_rough.tga"
+dest_files=["res://.godot/imported/stone_rough.tga-f339a37065e1472c17cdb305c0ab01cd.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/hdr_compression=1
 compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -31,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

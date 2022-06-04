@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfv41ycqxd8ia"
-path="res://.godot/imported/dirt_with_grass_side.tga-20770bd0eec9229f453d9ddd0724c126.ctex"
+uid="uid://k87sgcf5swly"
+path="res://.godot/imported/dirt_with_grass_top_norm.tga-5bfb6d16c603f29b0f20c22fe2b8ea30.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/dirt_with_grass_side.tga"
-dest_files=["res://.godot/imported/dirt_with_grass_side.tga-20770bd0eec9229f453d9ddd0724c126.ctex"]
+source_file="res://mods/default/textures/dirt_with_grass_top_norm.tga"
+dest_files=["res://.godot/imported/dirt_with_grass_top_norm.tga-5bfb6d16c603f29b0f20c22fe2b8ea30.ctex"]
 
 [params]
 
@@ -19,12 +19,12 @@ compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/bptc_ldr=0
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=1
+roughness/src_normal="res://mods/default/textures/dirt_with_grass_top_norm.tga"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

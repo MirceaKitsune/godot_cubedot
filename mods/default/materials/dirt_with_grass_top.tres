@@ -1,7 +1,19 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://draahi022p4tf"]
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://csirnvda87jup"]
 
-[ext_resource type="Texture2D" uid="uid://c80jy4s857geh" path="res://mods/default/textures/dirt_with_grass_top.tga" id="1_26uni"]
+[ext_resource type="Texture2D" uid="uid://c80jy4s857geh" path="res://mods/default/textures/dirt_with_grass_top_diff.tga" id="1_0flql"]
+[ext_resource type="Texture2D" uid="uid://dcm2dyy4l0n1o" path="res://mods/default/textures/dirt_with_grass_top_depth.tga" id="2_a3sh3"]
+[ext_resource type="Texture2D" uid="uid://k87sgcf5swly" path="res://mods/default/textures/dirt_with_grass_top_norm.tga" id="2_g0yj2"]
+[ext_resource type="Texture2D" uid="uid://webmvjj3xwp7" path="res://mods/default/textures/dirt_with_grass_top_rough.tga" id="4_bnbur"]
 
 [resource]
-albedo_texture = ExtResource( "1_26uni" )
+albedo_texture = ExtResource( "1_0flql" )
+roughness_texture = ExtResource( "4_bnbur" )
+normal_enabled = true
+normal_texture = ExtResource( "2_g0yj2" )
+heightmap_enabled = true
+heightmap_scale = 0.1
+heightmap_deep_parallax = true
+heightmap_min_layers = 8
+heightmap_max_layers = 32
+heightmap_texture = ExtResource( "2_a3sh3" )
 texture_filter = 0

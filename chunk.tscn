@@ -4,3 +4,9 @@
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource( "1_g3m50" )
+
+[node name="Chunk" type="MeshInstance3D" parent="."]
+
+[node name="ChunkBody" type="StaticBody3D" parent="Chunk"]
+
+[node name="ChunkBodyCollision" type="CollisionShape3D" parent="Chunk/ChunkBody"]
