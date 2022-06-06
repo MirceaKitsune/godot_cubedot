@@ -5,7 +5,9 @@
 	"lod": 4,
 	"mapgen": {
 		"resolution_horizontal": 1,
-		"resolution_vertical": 1,
+		"resolution_vertical": 0.5,
+		"height_min": null,
+		"height_max": null,
 		"density_min": null,
 		"density_max": 1,
 		"top": 4

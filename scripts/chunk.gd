@@ -1,13 +1,9 @@
 extends Node3D
 
-@export var cache = true
-
 var pos: Vector3i
 var mins: Vector3i
 var maxs: Vector3i
-
-var vm: VoxelMesh 
-var vd: VoxelData
+var seed: int
 var data: Dictionary
 
 var node: MeshInstance3D
@@ -23,25 +19,25 @@ func init(parent: Node, p: Vector3i, min: Vector3i, max: Vector3i, s: int):
 	pos = p
 	mins = min
 	maxs = max
-	vm = VoxelMesh.new(mins, maxs)
-	vd = VoxelData.new(mins, maxs, s)
+	seed = s
 	position = pos
 
 	parent.call_deferred("add_child", self)
 
 func update(pos: Vector3, res: float):
+	# Generate point data if not already cached for this resolution
 	if !data.has(res):
+		var vd = VoxelData.new(mins, maxs, seed)
 		data[res] = vd.read(pos, res)
-	if len(data[res]) == 0:
-		return
 
-	var mesh = vm.generate(data[res], res)
-	var mesh_collision = mesh.create_trimesh_shape()
-	node.set_mesh(mesh)
-	node_body_collisions.set_shape(mesh_collision)
-
-	# If caching is enabled, remember the points at each resolution as long as the chunk isn't removed
-	# This provides faster results when returning to a chunk, but does so at the cost of greatly increased memory use
-	# In the future this will become mandatory, as voxel data will be needed in realtime for inventory processing or effects
-	if !cache:
-		data = {}
+	# Obtain the chunk mesh and its collisions if any points exist, apply valid changes to the nodes
+	# Returns true if geometry was generated or false if this chunk produced no faces
+	if len(data[res]) > 0:
+		var vm = VoxelMesh.new(mins, maxs)
+		var m = vm.generate(data[res], res)
+		if m.mesh:
+			node.set_mesh(m.mesh)
+			if m.mesh_collision:
+				node_body_collisions.set_shape(m.mesh_collision)
+			return true
+	return false

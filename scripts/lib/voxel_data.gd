@@ -1,4 +1,5 @@
 # Voxel data: Reads processes and writes point data containing voxel information stored in a virtual cube
+# Instances are meant to be used temporarily to read or write data and are then disposed of
 class_name VoxelData extends RefCounted
 
 var seed: int
@@ -38,14 +39,13 @@ func _generate(pos: Vector3, res: float, n: FastNoiseLite):
 			for z in range(points_mins.z - 1, points_maxs.z + 2):
 				for node in nodes:
 					var vec = Vector3(x, y, z) * res
-					var vec_resolution = Vector3(node.mapgen.resolution_horizontal, node.mapgen.resolution_vertical, node.mapgen.resolution_horizontal)
-					var vec_point = vec.snapped(vec_resolution)
-					for i in node.mapgen.top + 1:
-						var vec_point_offset = Vector3(0, i, 0)
-						var np = _generate_noise(pos + vec_point - vec_point_offset, n)
-						if (!node.mapgen.density_min or np >= node.mapgen.density_min) and (!node.mapgen.density_max or np <= node.mapgen.density_max):
-							points[vec] = node.name
-							break
+					var vec_point = vec.snapped(Vector3(node.mapgen.resolution_horizontal, node.mapgen.resolution_vertical, node.mapgen.resolution_horizontal))
+					if (!typeof(node.mapgen.height_min) == TYPE_FLOAT or vec_point.y >= node.mapgen.height_min) and (!typeof(node.mapgen.height_max) == TYPE_FLOAT or vec_point.y <= node.mapgen.height_max):
+						for i in node.mapgen.top + 1:
+							var np = _generate_noise(pos + vec_point - Vector3(0, i * node.mapgen.resolution_vertical, 0), n)
+							if (!typeof(node.mapgen.density_min) == TYPE_FLOAT or np >= node.mapgen.density_min) and (!typeof(node.mapgen.density_max) == TYPE_FLOAT or np <= node.mapgen.density_max):
+								points[vec] = node.name
+								break
 					if points.has(vec):
 						break
 	noise_cache = {}

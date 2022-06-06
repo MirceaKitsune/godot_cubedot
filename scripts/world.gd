@@ -35,7 +35,7 @@ func _update(t: int):
 		pos_center = player_chunk
 
 		# Remove existing chunks that are outside the view sphere
-		for pos in chunks[t].duplicate():
+		for pos in chunks_lod[t].duplicate():
 			if pos_center != player_chunk:
 				break
 
@@ -63,14 +63,19 @@ func _update(t: int):
 			var lod_index = floor(lod_dist / (view.distance / len(view.lod)))
 			var lod = view.lod[lod_index] * Data.settings.resolution
 
-			# Update this chunk if its LOD level changed
-			# Zero LOD is used to mark chunks as empty, this avoids recalculation if no points were found at the smallest resolution
-			if not chunks_lod[t].has(pos) or chunks_lod[t][pos] != lod:
+			# Update this chunk if its LOD level has changed
+			# The nodes of empty chunks are immediately removed as to not waste resources and produce extra iterations later
+			# If there was no data at the highest resolution, we know this chunk will never generate faces, assign zero LOD level to skip further attempts
+			if not chunks_lod[t].has(pos) or (chunks_lod[t][pos] > 0 and chunks_lod[t][pos] != lod):
+				chunks_lod[t][pos] = lod
 				if !chunks[t].has(pos):
 					chunks[t][pos] = chunks_scene.instantiate()
 					chunks[t][pos].init(self, pos, mins, maxs, seed)
-				chunks[t][pos].update(pos, lod)
-				chunks_lod[t][pos] = lod
+				if !chunks[t][pos].update(pos, lod):
+					chunks[t][pos].queue_free()
+					chunks[t].erase(pos)
+					if lod == Data.settings.resolution:
+						chunks_lod[t][pos] = 0
 
 func _ready():
 	# Spawn the player above ground level
@@ -83,9 +88,8 @@ func _ready():
 
 func _enter_tree():
 	# Configure the number of threads based on the thread count setting and system capabilities
-	# By default only half of the available cores are used to avoid impacting system performance
 	# -1 = Automatic, 0 = Disabled, 1+ = Fixed count
-	threads = (int(OS.get_processor_count() / 2) if threads < 0 else threads) if OS.can_use_threads() else 0
+	threads = (OS.get_processor_count() if threads < 0 else threads) if OS.can_use_threads() else 0
 	for i in threads:
 		update_threads.append(Thread.new())
 	for i in max(1, threads):
@@ -106,9 +110,9 @@ func _enter_tree():
 	# Configure the virtual sphere of chunk positions visible from the player's POV
 	# Each position is calculated against the active chunk to decide what to spawn
 	# The list is sorted so points closest to the camera are processed first
-	for x in range(-view.distance, view.distance, view.chunk.x):
-		for y in range(-view.distance, view.distance, view.chunk.y):
-			for z in range(-view.distance, view.distance, view.chunk.z):
+	for x in range(-view.distance, view.distance + 1, view.chunk.x):
+		for y in range(-view.distance, view.distance + 1, view.chunk.y):
+			for z in range(-view.distance, view.distance + 1, view.chunk.z):
 				var pos = Vector3(x, y, z)
 				var dist = pos.distance_to(Vector3i(0, 0, 0))
 				if dist < view.distance:
@@ -118,7 +122,7 @@ func _enter_tree():
 func _process(_delta):
 	# View updates are preformed when the player moves into a new chunk
 	# This greatly improves performance while providing a good level of accuracy
-	var pos_chunk = player.position.snapped(maxs - mins)
+	var pos_chunk = player.position.snapped(view.chunk)
 	if player_chunk != pos_chunk:
 		player_chunk = pos_chunk
 
