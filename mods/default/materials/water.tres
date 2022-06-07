@@ -1,24 +1,114 @@
-[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://dwl55ow56ht8y"]
+[gd_resource type="StandardMaterial3D" load_steps=25 format=3 uid="uid://dwl55ow56ht8y"]
 
-[ext_resource type="Texture2D" uid="uid://6qmva0gjt7sv" path="res://mods/default/textures/water_diff.tga" id="1_6qofe"]
-[ext_resource type="Texture2D" uid="uid://bfcn1ck8mdnti" path="res://mods/default/textures/water_depth.tga" id="2_44hc5"]
-[ext_resource type="Texture2D" uid="uid://b3tjqvivwdcm4" path="res://mods/default/textures/water_norm.tga" id="3_xsr57"]
-[ext_resource type="Texture2D" uid="uid://cp6kc2wb8akmt" path="res://mods/default/textures/water_rough.tga" id="4_cqje8"]
+[ext_resource type="Texture2D" uid="uid://d2tjk6j8pdvlp" path="res://mods/default/textures/water_1_diff.tga" id="1_j8fg3"]
+[ext_resource type="Texture2D" uid="uid://cgd4tfupvr4le" path="res://mods/default/textures/water_2_diff.tga" id="2_ci51a"]
+[ext_resource type="Texture2D" uid="uid://csmf4ceyb70b8" path="res://mods/default/textures/water_3_diff.tga" id="3_6rd36"]
+[ext_resource type="Texture2D" uid="uid://dr8kyenyij4ch" path="res://mods/default/textures/water_4_diff.tga" id="4_02235"]
+[ext_resource type="Texture2D" uid="uid://cxmrm8wqwn0t8" path="res://mods/default/textures/water_5_diff.tga" id="5_xurb7"]
+[ext_resource type="Texture2D" uid="uid://ytfq4mg5050v" path="res://mods/default/textures/water_1_depth.tga" id="6_uf2lw"]
+[ext_resource type="Texture2D" uid="uid://bfj4ggevgydfu" path="res://mods/default/textures/water_2_depth.tga" id="7_05kpl"]
+[ext_resource type="Texture2D" uid="uid://btupg1hffrl01" path="res://mods/default/textures/water_3_depth.tga" id="8_hrk4x"]
+[ext_resource type="Texture2D" uid="uid://dooudr62ud6op" path="res://mods/default/textures/water_4_depth.tga" id="9_o01un"]
+[ext_resource type="Texture2D" uid="uid://0pt2wul040be" path="res://mods/default/textures/water_5_depth.tga" id="10_p57ii"]
+[ext_resource type="Texture2D" uid="uid://duyr8kngeql7m" path="res://mods/default/textures/water_1_norm.tga" id="11_mjiwi"]
+[ext_resource type="Texture2D" uid="uid://ce4nwhwrii7oj" path="res://mods/default/textures/water_1_rough.tga" id="12_cfbhi"]
+[ext_resource type="Texture2D" uid="uid://cw3venctbt53g" path="res://mods/default/textures/water_2_norm.tga" id="12_dgvkn"]
+[ext_resource type="Texture2D" uid="uid://bxuocta8vn3o0" path="res://mods/default/textures/water_2_rough.tga" id="13_2nqkj"]
+[ext_resource type="Texture2D" uid="uid://djcufaknep83v" path="res://mods/default/textures/water_3_norm.tga" id="13_lub11"]
+[ext_resource type="Texture2D" uid="uid://cxqfubsb2r20k" path="res://mods/default/textures/water_3_rough.tga" id="14_p0c2p"]
+[ext_resource type="Texture2D" uid="uid://bwuwut5wqvw0h" path="res://mods/default/textures/water_4_norm.tga" id="14_sayyl"]
+[ext_resource type="Texture2D" uid="uid://d1hxh642yvlct" path="res://mods/default/textures/water_4_rough.tga" id="15_lq8tm"]
+[ext_resource type="Texture2D" uid="uid://c6yevwwc51nej" path="res://mods/default/textures/water_5_norm.tga" id="15_ytcsf"]
+[ext_resource type="Texture2D" uid="uid://ckjm0t51k4jcf" path="res://mods/default/textures/water_5_rough.tga" id="16_k4x0n"]
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_viird"]
+frames = 8
+frame_0/texture = ExtResource( "1_j8fg3" )
+frame_1/texture = ExtResource( "2_ci51a" )
+frame_1/delay_sec = 0.0
+frame_2/texture = ExtResource( "3_6rd36" )
+frame_2/delay_sec = 0.0
+frame_3/texture = ExtResource( "4_02235" )
+frame_3/delay_sec = 0.0
+frame_4/texture = ExtResource( "5_xurb7" )
+frame_4/delay_sec = 0.0
+frame_5/texture = ExtResource( "4_02235" )
+frame_5/delay_sec = 0.0
+frame_6/texture = ExtResource( "3_6rd36" )
+frame_6/delay_sec = 0.0
+frame_7/texture = ExtResource( "2_ci51a" )
+frame_7/delay_sec = 0.0
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_5b2pf"]
+frames = 8
+frame_0/texture = ExtResource( "6_uf2lw" )
+frame_1/texture = ExtResource( "7_05kpl" )
+frame_1/delay_sec = 0.0
+frame_2/texture = ExtResource( "8_hrk4x" )
+frame_2/delay_sec = 0.0
+frame_3/texture = ExtResource( "9_o01un" )
+frame_3/delay_sec = 0.0
+frame_4/texture = ExtResource( "10_p57ii" )
+frame_4/delay_sec = 0.0
+frame_5/texture = ExtResource( "9_o01un" )
+frame_5/delay_sec = 0.0
+frame_6/texture = ExtResource( "8_hrk4x" )
+frame_6/delay_sec = 0.0
+frame_7/texture = ExtResource( "7_05kpl" )
+frame_7/delay_sec = 0.0
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_opiyj"]
+frames = 8
+frame_0/texture = ExtResource( "11_mjiwi" )
+frame_1/texture = ExtResource( "12_dgvkn" )
+frame_1/delay_sec = 0.0
+frame_2/texture = ExtResource( "13_lub11" )
+frame_2/delay_sec = 0.0
+frame_3/texture = ExtResource( "14_sayyl" )
+frame_3/delay_sec = 0.0
+frame_4/texture = ExtResource( "15_ytcsf" )
+frame_4/delay_sec = 0.0
+frame_5/texture = ExtResource( "14_sayyl" )
+frame_5/delay_sec = 0.0
+frame_6/texture = ExtResource( "13_lub11" )
+frame_6/delay_sec = 0.0
+frame_7/texture = ExtResource( "12_dgvkn" )
+frame_7/delay_sec = 0.0
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_mwlnl"]
+frames = 8
+frame_0/texture = ExtResource( "12_cfbhi" )
+frame_1/texture = ExtResource( "13_2nqkj" )
+frame_1/delay_sec = 0.0
+frame_2/texture = ExtResource( "14_p0c2p" )
+frame_2/delay_sec = 0.0
+frame_3/texture = ExtResource( "15_lq8tm" )
+frame_3/delay_sec = 0.0
+frame_4/texture = ExtResource( "16_k4x0n" )
+frame_4/delay_sec = 0.0
+frame_5/texture = ExtResource( "15_lq8tm" )
+frame_5/delay_sec = 0.0
+frame_6/texture = ExtResource( "14_p0c2p" )
+frame_6/delay_sec = 0.0
+frame_7/texture = ExtResource( "13_2nqkj" )
+frame_7/delay_sec = 0.0
 
 [resource]
 transparency = 1
 cull_mode = 2
+diffuse_mode = 3
+specular_mode = 1
 albedo_color = Color(1, 1, 1, 0.247059)
-albedo_texture = ExtResource( "1_6qofe" )
-roughness_texture = ExtResource( "4_cqje8" )
+albedo_texture = SubResource( "AnimatedTexture_viird" )
+roughness_texture = SubResource( "AnimatedTexture_mwlnl" )
 normal_enabled = true
-normal_texture = ExtResource( "3_xsr57" )
+normal_texture = SubResource( "AnimatedTexture_opiyj" )
 heightmap_enabled = true
 heightmap_scale = 0.1
 heightmap_deep_parallax = true
 heightmap_min_layers = 8
 heightmap_max_layers = 32
-heightmap_texture = ExtResource( "2_44hc5" )
+heightmap_texture = SubResource( "AnimatedTexture_5b2pf" )
 refraction_enabled = true
 refraction_scale = 0.1
 texture_filter = 0

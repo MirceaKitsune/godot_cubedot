@@ -6,10 +6,10 @@
 	"mapgen": {
 		"resolution_horizontal": 1,
 		"resolution_vertical": 0.5,
-		"height_min": 50,
+		"height_min": 0.5,
 		"height_max": null,
-		"density_min": null,
-		"density_max": 1,
+		"density_min": 0.125,
+		"density_max": null,
 		"top": 5,
 		"priority": 1
 	}

@@ -3,5 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://chwlo0c18xsvt" path="res://mods/default/textures/default.tga" id="1_shooo"]
 
 [resource]
+diffuse_mode = 3
+specular_mode = 1
 albedo_texture = ExtResource( "1_shooo" )
 texture_filter = 0

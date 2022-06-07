@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://f3ygic071yrt" path="res://mods/default/textures/dirt_with_grass_side_rough.tga" id="4_ajt6k"]
 
 [resource]
+diffuse_mode = 3
+specular_mode = 1
 albedo_texture = ExtResource( "1_r5i8o" )
 roughness_texture = ExtResource( "4_ajt6k" )
 normal_enabled = true

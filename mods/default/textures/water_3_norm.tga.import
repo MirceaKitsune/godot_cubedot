@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3tjqvivwdcm4"
-path="res://.godot/imported/water_norm.tga-8d6efc58919b85b1f02459770ee105a7.ctex"
+uid="uid://djcufaknep83v"
+path="res://.godot/imported/water_3_norm.tga-6f7eed9ca0a52960fd429c4a86c25f1c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/water_norm.tga"
-dest_files=["res://.godot/imported/water_norm.tga-8d6efc58919b85b1f02459770ee105a7.ctex"]
+source_file="res://mods/default/textures/water_3_norm.tga"
+dest_files=["res://.godot/imported/water_3_norm.tga-6f7eed9ca0a52960fd429c4a86c25f1c.ctex"]
 
 [params]
 
@@ -24,7 +24,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://mods/default/textures/water_norm.tga"
+roughness/src_normal="res://mods/default/textures/water_3_norm.tga"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

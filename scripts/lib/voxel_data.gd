@@ -10,16 +10,29 @@ var noise_cache: Dictionary
 func _sort_materials(a: Dictionary, b: Dictionary):
 	return a.mapgen.priority > b.mapgen.priority
 
-func _generate_noise(pos: Vector3, n: FastNoiseLite):
+func _generate_noise(pos: Vector3, n: FastNoiseLite, d: Curve):
 	# Verify if this voxel position passes the noise test
 	# As noise can be expensive remember the value we found at this position during previous checks
+	# An offset of -1 guarantees no density while an offset of +1 guarantees full density, skip checking the noise outside those ranges
 	if not noise_cache.has(pos):
-		var ofs = Data.settings.mapgen.density_up if pos.y >= 0 else Data.settings.mapgen.density_down
-		var np = n.get_noise_3dv(pos) + (pos.y / ofs)
-		noise_cache[pos] = np
+		var ofs_point = range_lerp(pos.y, -Data.settings.mapgen.scale_height / 2, +Data.settings.mapgen.scale_height / 2, 0, 1)
+		var ofs = d.interpolate_baked(ofs_point)
+		if ofs <= -1:
+			noise_cache[pos] = 0
+		elif ofs >= +1:
+			noise_cache[pos] = 1
+		else:
+			noise_cache[pos] = min(1, max(0, abs(n.get_noise_3dv(pos)) + ofs))
 	return noise_cache[pos]
 
 func _generate(pos: Vector3, res: float, n: FastNoiseLite):
+	# Compile the density mapgen settings into a curve
+	var density = Curve.new()
+	for point in len(Data.settings.mapgen.scale_height_curve):
+		var point_index = float(point) / (len(Data.settings.mapgen.scale_height_curve) - 1)
+		density.add_point(Vector2(point_index, Data.settings.mapgen.scale_height_curve[point]))
+	density.bake()
+
 	# Find all materials with a generator definition and sort them accordingly
 	var nodes = []
 	for node in Data.nodes:
@@ -43,7 +56,7 @@ func _generate(pos: Vector3, res: float, n: FastNoiseLite):
 					if has_height_min and has_height_max:
 						for i in abs(node.mapgen.top) + 1:
 							var check_density = typeof(node.mapgen.density_min) == TYPE_FLOAT or typeof(node.mapgen.density_max) == TYPE_FLOAT
-							var noise = _generate_noise(vec_point - Vector3(0, i * node.mapgen.resolution_vertical, 0), n) if check_density else null
+							var noise = _generate_noise(vec_point - Vector3(0, i * node.mapgen.resolution_vertical, 0), n, density) if check_density else null
 							var has_density_min = typeof(node.mapgen.density_min) != TYPE_FLOAT or noise >= node.mapgen.density_min
 							var has_density_max = typeof(node.mapgen.density_max) != TYPE_FLOAT or noise <= node.mapgen.density_max
 							if has_density_min and has_density_max:
@@ -57,9 +70,10 @@ func _generate(pos: Vector3, res: float, n: FastNoiseLite):
 func read(pos: Vector3, res: float):
 	# When storage is implemented, this function will read chunk data from the drive and only generate if none is found
 	var noise = FastNoiseLite.new()
-	noise.noise_type = noise.TYPE_SIMPLEX
+	noise.noise_type = noise.TYPE_PERLIN
+	noise.fractal_type = noise.FRACTAL_RIDGED
 	noise.seed = seed
-	noise.frequency = 1.0 / Data.settings.mapgen.size
+	noise.frequency = 1.0 / Data.settings.mapgen.scale
 	return _generate(pos, res, noise)
 
 func _init(min: Vector3i, max: Vector3i, s: int):

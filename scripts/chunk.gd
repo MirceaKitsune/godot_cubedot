@@ -6,22 +6,12 @@ var maxs: Vector3i
 var seed: int
 var data: Dictionary
 
-var node: MeshInstance3D
-var node_body: StaticBody3D
-var node_body_collisions: CollisionShape3D
-
-func _ready():
-	node = get_node("Chunk")
-	node_body = node.get_node("ChunkBody")
-	node_body_collisions = node_body.get_node("ChunkBodyCollision")
-
 func init(parent: Node, p: Vector3i, min: Vector3i, max: Vector3i, s: int):
 	pos = p
 	mins = min
 	maxs = max
 	seed = s
 	position = pos
-
 	parent.call_deferred("add_child", self)
 
 func update(pos: Vector3, res: float):
@@ -36,8 +26,8 @@ func update(pos: Vector3, res: float):
 		var vm = VoxelMesh.new(mins, maxs)
 		var m = vm.generate(data[res], res)
 		if m.mesh:
-			node.set_mesh(m.mesh)
+			$Chunk.set_mesh(m.mesh)
 			if m.mesh_collision:
-				node_body_collisions.set_shape(m.mesh_collision)
+				$Chunk/ChunkBody/ChunkBodyCollision.set_shape(m.mesh_collision)
 			return true
 	return false

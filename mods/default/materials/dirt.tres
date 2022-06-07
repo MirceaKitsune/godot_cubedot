@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://dbic10hcs004g" path="res://mods/default/textures/dirt_rough.tga" id="4_q10el"]
 
 [resource]
+diffuse_mode = 3
+specular_mode = 1
 albedo_texture = ExtResource( "1_vhty0" )
 roughness_texture = ExtResource( "4_q10el" )
 normal_enabled = true

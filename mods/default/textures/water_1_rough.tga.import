@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6qmva0gjt7sv"
-path="res://.godot/imported/water_diff.tga-542975fad94420c3828fed2b412245b8.ctex"
+uid="uid://ce4nwhwrii7oj"
+path="res://.godot/imported/water_1_rough.tga-b98f37b448dd25de0cb4a8e9cd6633db.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/water_diff.tga"
-dest_files=["res://.godot/imported/water_diff.tga-542975fad94420c3828fed2b412245b8.ctex"]
+source_file="res://mods/default/textures/water_1_rough.tga"
+dest_files=["res://.godot/imported/water_1_rough.tga-b98f37b448dd25de0cb4a8e9cd6633db.ctex"]
 
 [params]
 

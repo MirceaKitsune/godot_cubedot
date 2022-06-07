@@ -24,11 +24,17 @@ func _process(delta):
 	if Input.is_key_pressed(KEY_ESCAPE):
 		get_tree().quit()
 
+	# Toggle noclip
+	if Input.is_key_pressed(KEY_N):
+		$PlayerCollision.disabled = true
+	if Input.is_key_pressed(KEY_M):
+		$PlayerCollision.disabled = false
+
 	# Toggle the light
 	if Input.is_key_pressed(KEY_E):
-		get_node("PlayerLight").visible = true
+		$PlayerLight.visible = true
 	if Input.is_key_pressed(KEY_Q):
-		get_node("PlayerLight").visible = false
+		$PlayerLight.visible = false
 
 	# Set view modes for debugging
 	if Input.is_key_pressed(KEY_F1):
@@ -79,8 +85,7 @@ func _physics_process(delta):
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		var camera = get_node("PlayerCamera")
-		camera.rotate_x(-Sensitivity_Y * event.relative.y)
-		camera.rotation.x = min(deg2rad(Maximum_Y_Look), max(deg2rad(Minimum_Y_Look), camera.rotation.x))
+		$PlayerCamera.rotate_x(-Sensitivity_Y * event.relative.y)
+		$PlayerCamera.rotation.x = min(deg2rad(Maximum_Y_Look), max(deg2rad(Minimum_Y_Look), $PlayerCamera.rotation.x))
 
 		rotate_y(-Sensitivity_X * event.relative.x)

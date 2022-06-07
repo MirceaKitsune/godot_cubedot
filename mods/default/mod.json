@@ -5,8 +5,8 @@
 	"resolution_texture": 1,
 	"layer_solid": 0,
 	"mapgen": {
-		"size": 128,
-		"density_up": 64,
-		"density_down": 1024
+		"scale": 512,
+		"scale_height": 256,
+		"scale_height_curve": [1, 0.75, 0.5, 0, -0.5, -0.625, -0.75, -0.875, -1]
 	}
 }

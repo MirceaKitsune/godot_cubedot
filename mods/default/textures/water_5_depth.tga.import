@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfcn1ck8mdnti"
-path="res://.godot/imported/water_depth.tga-2f9917e14d86d0e6dbdda91822c6425b.ctex"
+uid="uid://0pt2wul040be"
+path="res://.godot/imported/water_5_depth.tga-36e16107a3e3cb3c77aa8e2c94bd9932.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/water_depth.tga"
-dest_files=["res://.godot/imported/water_depth.tga-2f9917e14d86d0e6dbdda91822c6425b.ctex"]
+source_file="res://mods/default/textures/water_5_depth.tga"
+dest_files=["res://.godot/imported/water_5_depth.tga-36e16107a3e3cb3c77aa8e2c94bd9932.ctex"]
 
 [params]
 
@@ -19,12 +19,12 @@ compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/bptc_ldr=0
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=7
+roughness/src_normal="res://mods/default/textures/water_2_norm.tga"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

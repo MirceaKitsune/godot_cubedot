@@ -11,9 +11,9 @@ Mod data is stored under the mods subdirectory, active mods are loaded in alphab
 	- resolution_texture (integer): The scale of voxel textures relative to the voxel resolution. The maximum value is 1, textures larger than the voxel size cause out of sync mapping and are not supported.
 	- layer_solid (integer): The last node layer that is solid. Nodes on layers above this will not produce any collisions.
 	- mapgen (dictionary): Global map generator settings used when creating the world. Settings include:
-		- size (float): The scale of the noise used by the terrain generator. Larger values result in smoother terrains and bigger caves.
-		- density_up (float): The density of terrain noise increases by this amount the higher up you go. Lower values result in taller cliffs.
-		- density_down (float): The density of terrain noise decreases by this amount the lower down you go. Lower values result in deeper valleys.
+		- scale (float): The scale of the noise used by the terrain generator. Larger values result in smoother terrains and bigger caves.
+		- scale_height (float): The scale of the density curve. The density is mapped between -this and +this centered at height 0. The value determines how tall mountains will be and how deep underwater caves go.
+		- scale_height_curve (array): The point list for the density curve. Each value is an offset applied to noise at that given height. The first point is located at -scale_height, the last point is located at +scale_height, if the count is an odd number the middle point is height 0. As density is meant to be full below the min height and empty above the max height, the first point should always be +1 and the last -1, otherwise caves or cliffs will form indefinitely. A basic noise curve should look like [1, 0, -1]
 
 - mod/nodes: JSON definitions of voxel types. Each file represents an unique node. Options include:
 	- name (string): The unique name of this material, eg: "dirt"

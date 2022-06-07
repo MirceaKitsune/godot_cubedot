@@ -87,7 +87,6 @@ func _ready():
 	var player_scene_instance = player_scene.instantiate()
 	add_child(player_scene_instance)
 	player = player_scene_instance.get_node("Player")
-	player.position = Vector3(0, Data.settings.mapgen.density_up * 2, 0)
 	player_chunk = Vector3(INF, INF, INF)
 
 func _enter_tree():

@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://webmvjj3xwp7" path="res://mods/default/textures/dirt_with_grass_top_rough.tga" id="4_bnbur"]
 
 [resource]
+diffuse_mode = 3
+specular_mode = 1
 albedo_texture = ExtResource( "1_0flql" )
 roughness_texture = ExtResource( "4_bnbur" )
 normal_enabled = true
