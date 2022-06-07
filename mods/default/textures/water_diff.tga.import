@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfg6awo5kr7jf"
-path="res://.godot/imported/stone_depth.tga-e8dd879111eac0a11fbed5ff96d3f1b9.ctex"
+uid="uid://6qmva0gjt7sv"
+path="res://.godot/imported/water_diff.tga-542975fad94420c3828fed2b412245b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods/default/textures/stone_depth.tga"
-dest_files=["res://.godot/imported/stone_depth.tga-e8dd879111eac0a11fbed5ff96d3f1b9.ctex"]
+source_file="res://mods/default/textures/water_diff.tga"
+dest_files=["res://.godot/imported/water_diff.tga-542975fad94420c3828fed2b412245b8.ctex"]
 
 [params]
 
@@ -23,8 +23,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=7
-roughness/src_normal="res://mods/default/textures/water_norm.tga"
+roughness/mode=0
+roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

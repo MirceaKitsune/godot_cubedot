@@ -8,9 +8,7 @@ var maxs: Vector3i
 var noise_cache: Dictionary
 
 func _sort_materials(a: Dictionary, b: Dictionary):
-	# Nodes with a higher offset must spawn after those with a lower one
-	# This ensures that nodes intended as toppings don't cut through their base and overshoot their offset
-	return a.mapgen.top < b.mapgen.top
+	return a.mapgen.priority > b.mapgen.priority
 
 func _generate_noise(pos: Vector3, n: FastNoiseLite):
 	# Verify if this voxel position passes the noise test
@@ -39,11 +37,16 @@ func _generate(pos: Vector3, res: float, n: FastNoiseLite):
 			for z in range(points_mins.z - 1, points_maxs.z + 2):
 				for node in nodes:
 					var vec = Vector3(x, y, z) * res
-					var vec_point = vec.snapped(Vector3(node.mapgen.resolution_horizontal, node.mapgen.resolution_vertical, node.mapgen.resolution_horizontal))
-					if (!typeof(node.mapgen.height_min) == TYPE_FLOAT or vec_point.y >= node.mapgen.height_min) and (!typeof(node.mapgen.height_max) == TYPE_FLOAT or vec_point.y <= node.mapgen.height_max):
-						for i in node.mapgen.top + 1:
-							var np = _generate_noise(pos + vec_point - Vector3(0, i * node.mapgen.resolution_vertical, 0), n)
-							if (!typeof(node.mapgen.density_min) == TYPE_FLOAT or np >= node.mapgen.density_min) and (!typeof(node.mapgen.density_max) == TYPE_FLOAT or np <= node.mapgen.density_max):
+					var vec_point = pos + vec.snapped(Vector3(node.mapgen.resolution_horizontal, node.mapgen.resolution_vertical, node.mapgen.resolution_horizontal))
+					var has_height_min = typeof(node.mapgen.height_min) != TYPE_FLOAT or vec_point.y >= node.mapgen.height_min
+					var has_height_max = typeof(node.mapgen.height_max) != TYPE_FLOAT or vec_point.y <= node.mapgen.height_max
+					if has_height_min and has_height_max:
+						for i in abs(node.mapgen.top) + 1:
+							var check_density = typeof(node.mapgen.density_min) == TYPE_FLOAT or typeof(node.mapgen.density_max) == TYPE_FLOAT
+							var noise = _generate_noise(vec_point - Vector3(0, i * node.mapgen.resolution_vertical, 0), n) if check_density else null
+							var has_density_min = typeof(node.mapgen.density_min) != TYPE_FLOAT or noise >= node.mapgen.density_min
+							var has_density_max = typeof(node.mapgen.density_max) != TYPE_FLOAT or noise <= node.mapgen.density_max
+							if has_density_min and has_density_max:
 								points[vec] = node.name
 								break
 					if points.has(vec):

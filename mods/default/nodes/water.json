@@ -1,0 +1,16 @@
+{
+	"name": "water",
+	"material": ["water"],
+	"layer": 1,
+	"lod": 0,
+	"mapgen": {
+		"resolution_horizontal": 1,
+		"resolution_vertical": 0.5,
+		"height_min": 0,
+		"height_max": 49.5,
+		"density_min": null,
+		"density_max": null,
+		"top": 0,
+		"priority": 0
+	}
+}

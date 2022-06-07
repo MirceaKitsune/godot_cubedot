@@ -77,11 +77,11 @@ func generate(points: Dictionary, res: float):
 			continue
 
 		# Look for neighbors in all directions (up, down, left, right, forward, backward)
-		# If a voxel on the same layer isn't found, this is a valid empty space, draw a face between the two positions
+		# If a voxel on the same or a lower layer isn't found, this is a valid empty space, draw a face between the two positions
 		for d in len(DIR):
 			var dir_pos = pos + (DIR[d] * res)
 			var dir_node = Data.nodes[points[dir_pos]] if points.has(dir_pos) else null
-			if dir_node and dir_node.layer == node.layer and !(dir_node.lod > 0 and dir_node.lod < res):
+			if dir_node and dir_node.layer <= node.layer and !(dir_node.lod > 0 and dir_node.lod < res):
 				continue
 
 			# Find the last material defined for this direction in the settings

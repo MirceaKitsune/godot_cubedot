@@ -18,7 +18,7 @@ Mod data is stored under the mods subdirectory, active mods are loaded in alphab
 - mod/nodes: JSON definitions of voxel types. Each file represents an unique node. Options include:
 	- name (string): The unique name of this material, eg: "dirt"
 	- material (array): The material files from "mod/materials" used by this node. Different materials will generate different meshes so be mindful of the performance impact. The array contains up to six values: First entry is bottom, second is top, the following four are the sides.
-	- layer (integer): The layer this material is rendered on. Faces between materials on the same layer are hidden to improve performance. This should only be non-zero for transparent surfaces of different types.
+	- layer (integer): The layer this material is rendered on. Faces between materials on the same layer are hidden to improve performance. This should only be non-zero for transparent surfaces of different types. Note that lower layers generate faces first, nodes on higher layers will avoid generating overlapping faces of inverted direction.
 	- lod (integer): This material is ignored if a chunk is rendered beyond this resolution. Increases performance by not generating more faces at a distance. Use lower numbers if the material is less noticeable and won't look bad by popping in and out of view.
 	- mapgen (dictionary): When present this material is used by the terrain generator and will appear in the world. Contains the following settings:
 		- resolution_horizontal (float): Mandatory, resolution of the noise check in the X and Z axes. Higher values improve performance but reduce the terrain detail. Should be a power or division of two and never lower than the mod's minimum resolution.
@@ -28,3 +28,4 @@ Mod data is stored under the mods subdirectory, active mods are loaded in alphab
 		- density_min (float): The minimum density noise must have for this material to appear. Noise increases or decreases with height whereas ground level is 0. To disable set this to null.
 		- density_max (float): The maximum density noise must have.
 		- top (integer): Mandatory for technical reasons, use 0 to disable. The node is repeated this number of times on the Y axis if a node was found below it. Useful to make some materials appear on top of others.
+		- priority (integer): Nodes with a higher value are checked first thus more likely to be spawned and cut through other nodes.

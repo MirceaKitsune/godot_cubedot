@@ -10,6 +10,7 @@
 		"height_max": null,
 		"density_min": null,
 		"density_max": 1,
-		"top": 0
+		"top": 0,
+		"priority": 3
 	}
 }

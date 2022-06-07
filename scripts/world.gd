@@ -2,14 +2,17 @@ extends Node3D
 
 @export var threads = -1
 
+# Performance profiles, based on the number of threads available for processing chunks
+# Repetitive LOD entries can be used to influence the curve, total count shouldn't exceed draw distance divided by chunk size
+# Chunk size and draw distance can be smaller vertically than they are horizontally, allowing better performance for less visual cost
 const view_profiles = [
-	{at_threads = 0, distance = 16, chunk = Vector3(2, 1, 2), lod = [1]},
-	{at_threads = 2, distance = 32, chunk = Vector3(2, 1, 2), lod = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2]},
-	{at_threads = 4, distance = 64, chunk = Vector3(4, 2, 4), lod = [1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4]},
-	{at_threads = 8, distance = 128, chunk = Vector3(8, 4, 8), lod = [1, 1, 1, 2, 2, 2, 4, 4, 4, 4, 6, 6]},
-	{at_threads = 16, distance = 256, chunk = Vector3(16, 8, 16), lod = [1, 1, 2, 2, 4, 4, 4, 4, 6, 6, 6, 6]},
-	{at_threads = 32, distance = 512, chunk = Vector3(32, 16, 32), lod = [1, 1, 2, 4, 4, 4, 6, 6, 6, 6, 8, 8]},
-	{at_threads = 64, distance = 1024, chunk = Vector3(64, 32, 64), lod = [1, 2, 4, 4, 6, 6, 6, 6, 8, 8, 8, 8]}
+	{at_threads = 0, distance = Vector3(16, 8, 16), chunk = Vector3(2, 1, 2), lod = [1]},
+	{at_threads = 2, distance = Vector3(32, 16, 32), chunk = Vector3(2, 1, 2), lod = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2]},
+	{at_threads = 4, distance = Vector3(64, 32, 64), chunk = Vector3(4, 2, 4), lod = [1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4]},
+	{at_threads = 8, distance = Vector3(128, 64, 128), chunk = Vector3(8, 4, 8), lod = [1, 1, 1, 2, 2, 2, 4, 4, 4, 4, 6, 6]},
+	{at_threads = 16, distance = Vector3(256, 128, 256), chunk = Vector3(16, 8, 16), lod = [1, 1, 2, 2, 4, 4, 4, 4, 6, 6, 6, 6]},
+	{at_threads = 32, distance = Vector3(512, 256, 512), chunk = Vector3(32, 16, 32), lod = [1, 1, 2, 4, 4, 4, 6, 6, 6, 6, 8, 8]},
+	{at_threads = 64, distance = Vector3(1024, 512, 1024), chunk = Vector3(64, 32, 64), lod = [1, 2, 4, 4, 6, 6, 6, 6, 8, 8, 8, 8]}
 ]
 
 var seed = Data.settings.seed if Data.settings.seed >= 0 else randi()
@@ -59,8 +62,9 @@ func _update(t: int):
 				continue
 
 			# LOD level is picked from the view settings array based on distance
+			var dist = max(view.distance.x, view.distance.y, view.distance.z)
 			var lod_dist = pos_sphere.distance_to(Vector3i(0, 0, 0))
-			var lod_index = floor(lod_dist / (view.distance / len(view.lod)))
+			var lod_index = floor(lod_dist / (dist / len(view.lod)))
 			var lod = view.lod[lod_index] * Data.settings.resolution
 
 			# Update this chunk if its LOD level has changed
@@ -110,12 +114,12 @@ func _enter_tree():
 	# Configure the virtual sphere of chunk positions visible from the player's POV
 	# Each position is calculated against the active chunk to decide what to spawn
 	# The list is sorted so points closest to the camera are processed first
-	for x in range(-view.distance, view.distance + 1, view.chunk.x):
-		for y in range(-view.distance, view.distance + 1, view.chunk.y):
-			for z in range(-view.distance, view.distance + 1, view.chunk.z):
+	var dist = max(view.distance.x, view.distance.y, view.distance.z)
+	for x in range(-view.distance.x, view.distance.x + 1, view.chunk.x):
+		for y in range(-view.distance.y, view.distance.y + 1, view.chunk.y):
+			for z in range(-view.distance.z, view.distance.z + 1, view.chunk.z):
 				var pos = Vector3(x, y, z)
-				var dist = pos.distance_to(Vector3i(0, 0, 0))
-				if dist < view.distance:
+				if pos.distance_to(Vector3i(0, 0, 0)) < dist:
 					sphere.append(pos)
 	sphere.sort_custom(_sort)
 

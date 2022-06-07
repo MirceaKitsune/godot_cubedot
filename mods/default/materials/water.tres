@@ -1,0 +1,24 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://dwl55ow56ht8y"]
+
+[ext_resource type="Texture2D" uid="uid://6qmva0gjt7sv" path="res://mods/default/textures/water_diff.tga" id="1_6qofe"]
+[ext_resource type="Texture2D" uid="uid://bfcn1ck8mdnti" path="res://mods/default/textures/water_depth.tga" id="2_44hc5"]
+[ext_resource type="Texture2D" uid="uid://b3tjqvivwdcm4" path="res://mods/default/textures/water_norm.tga" id="3_xsr57"]
+[ext_resource type="Texture2D" uid="uid://cp6kc2wb8akmt" path="res://mods/default/textures/water_rough.tga" id="4_cqje8"]
+
+[resource]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(1, 1, 1, 0.247059)
+albedo_texture = ExtResource( "1_6qofe" )
+roughness_texture = ExtResource( "4_cqje8" )
+normal_enabled = true
+normal_texture = ExtResource( "3_xsr57" )
+heightmap_enabled = true
+heightmap_scale = 0.1
+heightmap_deep_parallax = true
+heightmap_min_layers = 8
+heightmap_max_layers = 32
+heightmap_texture = ExtResource( "2_44hc5" )
+refraction_enabled = true
+refraction_scale = 0.1
+texture_filter = 0
