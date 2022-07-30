@@ -134,7 +134,7 @@ func _process(_delta):
 			_update(0)
 		for i in len(update_threads):
 			if !update_threads[i].is_started():
-				update_threads[i].start(Callable(self, "_update"), i)
+				update_threads[i].start(Callable(self, "_update").bind(i))
 
 	# Stop the generator threads that finished their job
 	for i in len(update_threads):

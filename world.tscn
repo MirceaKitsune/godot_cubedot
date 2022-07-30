@@ -11,12 +11,12 @@ ground_color = Color(0.247059, 0.184314, 0.121569, 1)
 exposure = 0.5
 
 [sub_resource type="Sky" id="Sky_tey3t"]
-sky_material = SubResource( "PhysicalSkyMaterial_n6vu6" )
+sky_material = SubResource("PhysicalSkyMaterial_n6vu6")
 process_mode = 3
 
 [sub_resource type="Environment" id="Environment_m507g"]
 background_mode = 2
-sky = SubResource( "Sky_tey3t" )
+sky = SubResource("Sky_tey3t")
 tonemap_mode = 2
 auto_exposure_enabled = true
 auto_exposure_scale = 0.25
@@ -94,15 +94,15 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_auf8j"]
 _data = {
-"daytime": SubResource( "Animation_ul771" )
+"daytime": SubResource("Animation_ul771")
 }
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource( "2_kny2v" )
+script = ExtResource("2_kny2v")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( "Environment_m507g" )
-camera_effects = SubResource( "CameraEffects_77pfq" )
+environment = SubResource("Environment_m507g")
+camera_effects = SubResource("CameraEffects_77pfq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 0.499998, 0.866027, 0, -0.866027, 0.499998, 0, 10, 0)
@@ -113,6 +113,6 @@ directional_shadow_max_distance = 256.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="WorldEnvironment/DirectionalLight3D"]
 libraries = {
-"": SubResource( "AnimationLibrary_auf8j" )
+"": SubResource("AnimationLibrary_auf8j")
 }
-script = ExtResource( "1_sd5hu" )
+script = ExtResource("1_sd5hu")

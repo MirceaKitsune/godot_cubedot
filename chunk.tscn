@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/chunk.gd" id="1_g3m50"]
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource( "1_g3m50" )
+script = ExtResource("1_g3m50")
 
 [node name="Chunk" type="MeshInstance3D" parent="."]
 
