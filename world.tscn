@@ -8,7 +8,6 @@ rayleigh_color = Color(0.0588235, 0.247059, 0.498039, 1)
 mie_color = Color(0.372549, 0.435294, 0.498039, 1)
 sun_disk_scale = 0.0
 ground_color = Color(0.247059, 0.184314, 0.121569, 1)
-exposure = 0.5
 
 [sub_resource type="Sky" id="Sky_tey3t"]
 sky_material = SubResource("PhysicalSkyMaterial_n6vu6")
@@ -18,11 +17,6 @@ process_mode = 3
 background_mode = 2
 sky = SubResource("Sky_tey3t")
 tonemap_mode = 2
-auto_exposure_enabled = true
-auto_exposure_scale = 0.25
-auto_exposure_min_luma = 0.25
-auto_exposure_max_luma = 0.25
-auto_exposure_speed = 1.0
 ssr_enabled = true
 ssao_enabled = true
 ssao_radius = 10.0
@@ -42,14 +36,8 @@ fog_height_density = 0.05
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.025
 
-[sub_resource type="CameraEffects" id="CameraEffects_77pfq"]
-dof_blur_far_enabled = true
-dof_blur_far_distance = 256.0
-dof_blur_far_transition = 64.0
-dof_blur_near_enabled = true
-dof_blur_near_distance = 1.0
-dof_blur_near_transition = 0.5
-dof_blur_amount = 0.05
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_scvb3"]
+frustum_far = 1000.0
 
 [sub_resource type="Animation" id="Animation_ul771"]
 resource_name = "daytime"
@@ -102,7 +90,7 @@ script = ExtResource("2_kny2v")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_m507g")
-camera_effects = SubResource("CameraEffects_77pfq")
+camera_attributes = SubResource("CameraAttributesPhysical_scvb3")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 0.499998, 0.866027, 0, -0.866027, 0.499998, 0, 10, 0)

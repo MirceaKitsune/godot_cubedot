@@ -86,6 +86,6 @@ func _physics_process(delta):
 func _input(event):
 	if event is InputEventMouseMotion:
 		$PlayerCamera.rotate_x(-Sensitivity_Y * event.relative.y)
-		$PlayerCamera.rotation.x = min(deg2rad(Maximum_Y_Look), max(deg2rad(Minimum_Y_Look), $PlayerCamera.rotation.x))
+		$PlayerCamera.rotation.x = min(deg_to_rad(Maximum_Y_Look), max(deg_to_rad(Minimum_Y_Look), $PlayerCamera.rotation.x))
 
 		rotate_y(-Sensitivity_X * event.relative.x)

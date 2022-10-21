@@ -15,8 +15,8 @@ func _generate_noise(pos: Vector3, n: FastNoiseLite, d: Curve):
 	# As noise can be expensive remember the value we found at this position during previous checks
 	# An offset of -1 guarantees no density while an offset of +1 guarantees full density, skip checking the noise outside those ranges
 	if not noise_cache.has(pos):
-		var ofs_point = range_lerp(pos.y, -Data.settings.mapgen.scale_height / 2, +Data.settings.mapgen.scale_height / 2, 0, 1)
-		var ofs = d.interpolate_baked(ofs_point)
+		var ofs_point = remap(pos.y, -Data.settings.mapgen.scale_height / 2, +Data.settings.mapgen.scale_height / 2, 0, 1)
+		var ofs = d.sample_baked(ofs_point)
 		if ofs <= -1:
 			noise_cache[pos] = 0
 		elif ofs >= +1:

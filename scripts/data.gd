@@ -9,18 +9,18 @@ var nodes: Dictionary
 var materials: Dictionary
 
 func _get_files_json(path: String):
-	var file = File.new()
 	var json = JSON.new()
-	file.open(path, File.READ)
-	json.parse(file.get_as_text())
+	if FileAccess.file_exists(path):
+		var file = FileAccess.open(path, FileAccess.READ)
+		json.parse(file.get_as_text())
 	return json.get_data()
 
 func _get_files(directory: String):
 	var list = []
 	for mod in mods_active:
 		var path = "res://mods/" + mod + "/" + directory
-		var dir = Directory.new()
-		if dir.open(path) == OK:
+		if DirAccess.dir_exists_absolute(path):
+			var dir = DirAccess.open(path)
 			dir.list_dir_begin()
 			for f in dir.get_files():
 				list.append({ name = f.split(".")[0], path = path + "/" + f })

@@ -92,7 +92,7 @@ func _ready():
 func _enter_tree():
 	# Configure the number of threads based on the thread count setting and system capabilities
 	# -1 = Automatic, 0 = Disabled, 1+ = Fixed count
-	threads = (OS.get_processor_count() if threads < 0 else threads) if OS.can_use_threads() else 0
+	threads = OS.get_processor_count() if threads < 0 else threads
 	for i in threads:
 		update_threads.append(Thread.new())
 	for i in max(1, threads):
